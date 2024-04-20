@@ -14,21 +14,22 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import top.theillusivec4.curios.api.CuriosCapability;
 import top.theillusivec4.curios.api.type.capability.ICurio;
 
 import java.util.UUID;
 
 public class WrappedICurioProvider implements Accessory, LootingAdjustment, FortuneAdjustment, AllowWalingOnSnow, EndermanMasked, PiglinNeutralInducer {
 
-    private final ICapabilityProvider<ItemStack, Void, ICurio> icurioProvider;
+    private final ICapabilityProvider icurioProvider;
 
-    public WrappedICurioProvider(ICapabilityProvider<ItemStack, Void, ICurio> icurioProvider){
+    public WrappedICurioProvider(ICapabilityProvider icurioProvider){
         this.icurioProvider = icurioProvider;
     }
 
     public ICurio iCurio(ItemStack stack){
-        return icurioProvider.getCapability(stack, null);
+        return stack.getCapability(CuriosCapability.ITEM).orElse(null);
     }
 
     @Override

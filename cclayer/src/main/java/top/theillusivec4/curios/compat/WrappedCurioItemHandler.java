@@ -15,9 +15,10 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
-import net.neoforged.neoforge.items.wrapper.CombinedInvWrapper;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.jetbrains.annotations.Nullable;
+import top.theillusivec4.curios.api.CuriosCapability;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.SlotResult;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
@@ -34,17 +35,13 @@ public record WrappedCurioItemHandler(AccessoriesCapabilityImpl capability) impl
 
         var entity = this.capability.entity();
 
-        if (entity.hasData(CuriosRegistry.INVENTORY)) {
-            var inv = entity.getData(CuriosRegistry.INVENTORY);
-
-            inv.init(this);
-
-            entity.removeData(CuriosRegistry.INVENTORY);
-        }
+        var cap = entity.getCapability(CuriosCapability.INVENTORY);
     }
 
     public static void attemptConversion(AccessoriesCapabilityImpl capability) {
-        if (!capability.entity().hasData(CuriosRegistry.INVENTORY)) return;
+        var cap = capability.entity().getCapability(CuriosCapability.INVENTORY);
+
+        if (!cap.isPresent()) return;
 
         new WrappedCurioItemHandler(capability);
     }

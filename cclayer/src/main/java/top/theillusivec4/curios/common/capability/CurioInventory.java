@@ -8,7 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.compat.CuriosWrappingUtils;
@@ -18,6 +18,10 @@ import java.util.*;
 import java.util.function.Function;
 
 public class CurioInventory implements INBTSerializable<CompoundTag> {
+
+    public CurioInventory() {
+
+    }
 
     CompoundTag deserialized = new CompoundTag();
     boolean markDeserialized = false;

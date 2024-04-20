@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 @Mixin(targets = "io/wispforest/accessories/neoforge/AccessoriesForge")
 public abstract class AccessoriesForgeMixin {
 
-    @Inject(method = "intermediateRegisterListeners", at = @At("HEAD"))
+    @Inject(method = "intermediateRegisterListeners", at = @At("HEAD"), remap = false)
     private void registerAdditionalResourceLoaders(Consumer<PreparableReloadListener> registrationMethod, CallbackInfo ci) {
         registrationMethod.accept(CuriosSlotManager.INSTANCE);
         registrationMethod.accept(CuriosEntityManager.INSTANCE);

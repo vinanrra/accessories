@@ -21,11 +21,11 @@ import java.util.Map;
 @Mixin(SlotTypeLoader.class)
 public abstract class SlotTypeLoaderMixin {
 
-    @Shadow
+    @Shadow(remap = false)
     @Mutable
     private Map<String, SlotType> server;
 
-    @Inject(method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V", at = @At("TAIL"))
+    @Inject(method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V", at = @At("TAIL"), remap = false)
     private void injectCuriosSpecificSlots(Map<ResourceLocation, JsonObject> data, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci){
         var map = this.server;
 

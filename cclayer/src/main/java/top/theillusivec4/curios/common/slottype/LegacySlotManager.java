@@ -20,7 +20,7 @@
 package top.theillusivec4.curios.common.slottype;
 
 import com.google.common.collect.ImmutableMap;
-import net.neoforged.fml.InterModComms;
+import net.minecraftforge.fml.InterModComms;
 import top.theillusivec4.curios.api.SlotTypeMessage;
 import top.theillusivec4.curios.api.SlotTypePreset;
 import top.theillusivec4.curios.common.slottype.SlotType.Builder;

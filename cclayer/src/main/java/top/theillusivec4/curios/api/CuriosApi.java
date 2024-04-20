@@ -29,6 +29,9 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.ApiStatus;
 import org.slf4j.Logger;
 import top.theillusivec4.curios.api.type.ISlotType;
@@ -166,9 +169,15 @@ public final class CuriosApi {
    * @param stack The {@link ItemStack} to get the curio capability from
    * @return {@link Optional} of the curio capability
    */
-  public static Optional<ICurio> getCurio(ItemStack stack) {
+  public static LazyOptional<ICurio> getCurio(ItemStack stack) {
     apiError();
-    return Optional.empty();
+    return LazyOptional.empty();
+  }
+
+  @Nonnull
+  public static ICapabilityProvider createCurioProvider(final ICurio curio) {
+    CuriosApi.apiError();
+    return Items.AIR.getDefaultInstance();
   }
 
   /**
@@ -177,9 +186,9 @@ public final class CuriosApi {
    * @param livingEntity The {@link LivingEntity} to get the curio inventory capability from
    * @return {@link Optional} of the curio inventory capability
    */
-  public static Optional<ICuriosItemHandler> getCuriosInventory(LivingEntity livingEntity) {
+  public static LazyOptional<ICuriosItemHandler> getCuriosInventory(LivingEntity livingEntity) {
     apiError();
-    return Optional.empty();
+    return LazyOptional.empty();
   }
 
   /**

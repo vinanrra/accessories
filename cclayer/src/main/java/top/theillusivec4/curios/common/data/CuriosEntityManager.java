@@ -38,7 +38,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EntityType;
-import net.neoforged.neoforge.common.conditions.ICondition;
+import net.minecraftforge.common.crafting.conditions.ICondition;
 import top.theillusivec4.curios.CuriosConstants;
 import top.theillusivec4.curios.api.type.ISlotType;
 import top.theillusivec4.curios.common.slottype.LegacySlotManager;
@@ -179,7 +179,7 @@ public class CuriosEntityManager extends SimpleJsonResourceReloadListener {
       JsonObject jsonObject, ResourceLocation resourceLocation, ICondition.IContext ctx) {
     Map<EntityType<?>, Set<String>> map = new HashMap<>();
 
-    if (!ICondition.conditionsMatched(JsonOps.INSTANCE, jsonObject)) {
+    if (!ICondition.shouldRegisterEntry(jsonObject)) {
       CuriosConstants.LOG.debug("Skipping loading entity file {} as its conditions were not met",
           resourceLocation);
       return map;

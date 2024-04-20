@@ -27,6 +27,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.util.LazyOptional;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -95,13 +96,13 @@ public class MixinCuriosApi {
 
   @Inject(at = @At("HEAD"), method = "getCurio", cancellable = true)
   private static void curios$getCurio(ItemStack stack,
-                                      CallbackInfoReturnable<Optional<ICurio>> cir) {
+                                      CallbackInfoReturnable<LazyOptional<ICurio>> cir) {
     cir.setReturnValue(CuriosImplMixinHooks.getCurio(stack));
   }
 
   @Inject(at = @At("HEAD"), method = "getCuriosInventory", cancellable = true)
   private static void curios$getCuriosInventory(LivingEntity livingEntity,
-                                                CallbackInfoReturnable<Optional<ICuriosItemHandler>> cir) {
+                                                CallbackInfoReturnable<LazyOptional<ICuriosItemHandler>> cir) {
     cir.setReturnValue(CuriosImplMixinHooks.getCuriosInventory(livingEntity));
   }
 

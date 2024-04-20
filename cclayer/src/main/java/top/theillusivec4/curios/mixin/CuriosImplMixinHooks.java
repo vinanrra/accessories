@@ -37,7 +37,8 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.LazyOptional;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.CuriosCapability;
 import top.theillusivec4.curios.api.SlotAttribute;
@@ -47,6 +48,7 @@ import top.theillusivec4.curios.api.type.ISlotType;
 import top.theillusivec4.curios.api.type.capability.ICurio;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
+import top.theillusivec4.curios.common.capability.ItemizedCurioCapability;
 import top.theillusivec4.curios.common.slottype.SlotType;
 import top.theillusivec4.curios.compat.CuriosWrappingUtils;
 import top.theillusivec4.curios.compat.WrappedAccessory;
@@ -59,7 +61,7 @@ import java.util.stream.Collectors;
 
 public class CuriosImplMixinHooks {
 
-  private static final Map<Item, ICurioItem> REGISTRY = new ConcurrentHashMap<>();
+  public static final Map<Item, ICurioItem> REGISTRY = new ConcurrentHashMap<>();
 
   public static void registerCurio(Item item, ICurioItem icurio) {
     REGISTRY.put(item, icurio);
@@ -179,16 +181,23 @@ public class CuriosImplMixinHooks {
     return result;
   }
 
-  public static Optional<ICurio> getCurio(ItemStack stack) {
-    return Optional.ofNullable(stack.getCapability(CuriosCapability.ITEM));
+  public static LazyOptional<ICurio> getCurio(ItemStack stack) {
+    var capability = stack.getCapability(CuriosCapability.ITEM);
+
+    if(capability.isPresent()) return capability;
+
+    var accessory = AccessoriesAPI.getAccessory(stack);
+
+    if(accessory != null) return LazyOptional.of(() -> new ItemizedCurioCapability(new WrappedAccessory(accessory), stack));
+
+    return LazyOptional.empty();
   }
 
-  public static Optional<ICuriosItemHandler> getCuriosInventory(LivingEntity livingEntity) {
-
+  public static LazyOptional<ICuriosItemHandler> getCuriosInventory(LivingEntity livingEntity) {
     if (livingEntity != null) {
-      return Optional.ofNullable(livingEntity.getCapability(CuriosCapability.INVENTORY));
+      return livingEntity.getCapability(CuriosCapability.INVENTORY);
     } else {
-      return Optional.empty();
+      return LazyOptional.empty();
     }
   }
 
@@ -252,7 +261,7 @@ public class CuriosImplMixinHooks {
     }
     CurioAttributeModifierEvent evt =
         new CurioAttributeModifierEvent(stack, slotContext, uuid, multimap);
-    NeoForge.EVENT_BUS.post(evt);
+    MinecraftForge.EVENT_BUS.post(evt);
     return HashMultimap.create(evt.getModifiers());
   }
 

@@ -20,7 +20,7 @@
 package top.theillusivec4.curios.api.event;
 
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import top.theillusivec4.curios.api.SlotContext;
 
 /**

@@ -25,7 +25,8 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.jetbrains.annotations.NotNull;
@@ -47,12 +48,12 @@ import java.util.function.Predicate;
 public class CuriosHelper implements ICuriosHelper {
 
   @Override
-  public Optional<ICurio> getCurio(ItemStack stack) {
+  public LazyOptional<ICurio> getCurio(ItemStack stack) {
     return CuriosApi.getCurio(stack);
   }
 
   @Override
-  public Optional<ICuriosItemHandler> getCuriosHandler(
+  public LazyOptional<ICuriosItemHandler> getCuriosHandler(
       @Nonnull final LivingEntity livingEntity) {
     return CuriosApi.getCuriosInventory(livingEntity);
   }

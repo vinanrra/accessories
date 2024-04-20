@@ -30,6 +30,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,8 +47,8 @@ public class AccessoriesForge {
 
     public static IEventBus BUS;
 
-    public AccessoriesForge(final IEventBus eventBus) {
-        //Accessories.init();
+    public AccessoriesForge() {
+        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         AccessoriesForge.BUS = eventBus;
 

@@ -27,7 +27,7 @@ import java.util.Set;
 public abstract class AccessoriesAPIMixin {
 
     @Inject(method = "getUsedSlotsFor(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/Container;)Ljava/util/Collection;",
-            at = @At(value = "INVOKE", target = "Lio/wispforest/accessories/data/SlotTypeLoader;getSlotTypes(Lnet/minecraft/world/level/Level;)Ljava/util/Map;"))
+            at = @At(value = "INVOKE", target = "Lio/wispforest/accessories/data/SlotTypeLoader;getSlotTypes(Lnet/minecraft/world/level/Level;)Ljava/util/Map;"), remap = false)
     private static void cacheTrinketTags(LivingEntity entity, Container container, CallbackInfoReturnable<Collection<SlotType>> cir, @Share("curiosTags") LocalRef<Set<TagKey<Item>>> curiosTagsRef) {
         var curiosTags = new HashSet<TagKey<Item>>();
 
@@ -41,7 +41,7 @@ public abstract class AccessoriesAPIMixin {
     }
 
     @ModifyReceiver(method = "getUsedSlotsFor(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/Container;)Ljava/util/Collection;",
-            at = @At(value = "INVOKE", target = "Ljava/util/Optional;orElse(Ljava/lang/Object;)Ljava/lang/Object;"))
+            at = @At(value = "INVOKE", target = "Ljava/util/Optional;orElse(Ljava/lang/Object;)Ljava/lang/Object;"), remap = false)
     private static Optional<Boolean> checkTrinketTags(Optional<Boolean> optional, Object object, @Local SlotType slotType, @Share("curiosTags") LocalRef<Set<TagKey<Item>>> curiosTagsRef) {
         for (var itemTagKey : curiosTagsRef.get()) {
             var accessoryVersion = CuriosWrappingUtils.curiosToAccessories(itemTagKey.location().getPath());

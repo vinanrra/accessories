@@ -29,7 +29,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.neoforged.neoforge.common.conditions.ICondition;
+import net.minecraftforge.common.crafting.conditions.ICondition;
 import org.apache.commons.lang3.EnumUtils;
 import top.theillusivec4.curios.CuriosConstants;
 import top.theillusivec4.curios.api.CuriosApi;
@@ -94,7 +94,7 @@ public class CuriosSlotManager extends SimpleJsonResourceReloadListener {
         try {
           String id = resourcelocation.getPath();
 
-          if (!ICondition.conditionsMatched(JsonOps.INSTANCE, entry.getValue().getAsJsonObject())) {
+          if (!ICondition.shouldRegisterEntry(entry.getValue().getAsJsonObject())) {
             CuriosConstants.LOG.debug("Skipping loading slot {} as its conditions were not met",
                 resourcelocation);
             continue;
@@ -134,7 +134,7 @@ public class CuriosSlotManager extends SimpleJsonResourceReloadListener {
       try {
         String id = resourcelocation.getPath();
 
-        if (!ICondition.conditionsMatched(JsonOps.INSTANCE, entry.getValue().getAsJsonObject())) {
+        if (!ICondition.shouldRegisterEntry(entry.getValue().getAsJsonObject())) {
           CuriosConstants.LOG.debug("Skipping loading slot {} as its conditions were not met",
               resourcelocation);
           continue;
