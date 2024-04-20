@@ -120,9 +120,9 @@ public class AccessoriesMenu extends AbstractContainerMenu {
         for (int i = 0; i < 4; ++i) {
             final EquipmentSlot equipmentSlot = SLOT_IDS[i];
             this.addSlot(new Slot(inventory, 39 - i, 8, 8 + i * 18) {
-                public void setByPlayer(ItemStack newStack, ItemStack oldStack) {
-                    AccessoriesMenu.this.owner.onEquipItem(equipmentSlot, oldStack, newStack);
-                    super.setByPlayer(newStack, oldStack);
+                public void setByPlayer(ItemStack newStack) {
+                    AccessoriesMenu.this.owner.onEquipItem(equipmentSlot, this.getItem(), newStack);
+                    super.setByPlayer(newStack);
                 }
 
                 public int getMaxStackSize() {
@@ -155,9 +155,9 @@ public class AccessoriesMenu extends AbstractContainerMenu {
         }
 
         this.addSlot(new Slot(inventory, 40, 152, 62) {
-            public void setByPlayer(ItemStack newStack, ItemStack oldStack) {
-                AccessoriesMenu.this.owner.onEquipItem(EquipmentSlot.OFFHAND, oldStack, newStack);
-                super.setByPlayer(newStack, oldStack);
+            public void setByPlayer(ItemStack newStack) {
+                AccessoriesMenu.this.owner.onEquipItem(EquipmentSlot.OFFHAND, this.getItem(), newStack);
+                super.setByPlayer(newStack);
             }
 
             public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
@@ -335,7 +335,7 @@ public class AccessoriesMenu extends AbstractContainerMenu {
         }
 
         if (clickedStack.isEmpty()) {
-            clickedSlot.setByPlayer(ItemStack.EMPTY, oldStack);
+            clickedSlot.setByPlayer(ItemStack.EMPTY);
         } else {
             clickedSlot.setChanged();
         }

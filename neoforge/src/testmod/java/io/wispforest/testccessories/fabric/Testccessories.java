@@ -5,9 +5,9 @@ import io.wispforest.testccessories.fabric.accessories.AppleAccessory;
 import io.wispforest.testccessories.fabric.accessories.PointedDripstoneAccessory;
 import io.wispforest.testccessories.fabric.accessories.PotatoAccessory;
 import io.wispforest.testccessories.fabric.accessories.TntAccessory;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.slf4j.Logger;
 
 @Mod(Testccessories.MODID)

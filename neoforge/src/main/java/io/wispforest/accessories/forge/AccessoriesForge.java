@@ -1,44 +1,38 @@
-package io.wispforest.accessories.neoforge;
+package io.wispforest.accessories.forge;
 
 import com.mojang.logging.LogUtils;
 import io.wispforest.accessories.Accessories;
-import io.wispforest.accessories.api.AccessoriesCapability;
 import io.wispforest.accessories.api.events.extra.ImplementedEvents;
 import io.wispforest.accessories.data.EntitySlotLoader;
 import io.wispforest.accessories.data.SlotGroupLoader;
 import io.wispforest.accessories.data.SlotTypeLoader;
-import io.wispforest.accessories.impl.AccessoriesCapabilityImpl;
 import io.wispforest.accessories.impl.AccessoriesEventHandler;
 import io.wispforest.accessories.impl.AccessoriesHolderImpl;
-import io.wispforest.accessories.impl.InstanceCodecable;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.attachment.AttachmentType;
-import net.neoforged.neoforge.capabilities.EntityCapability;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
-import net.neoforged.neoforge.event.OnDatapackSyncEvent;
-import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.neoforged.neoforge.event.TickEvent;
-import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
-import net.neoforged.neoforge.event.entity.living.LootingLevelEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
-import net.neoforged.neoforge.registries.RegisterEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.*;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LootingLevelEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.RegisterEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.function.Consumer;
@@ -48,20 +42,7 @@ public class AccessoriesForge {
 
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static final AttachmentType<AccessoriesHolderImpl> HOLDER_ATTACHMENT_TYPE;
-
-    public static final EntityCapability<AccessoriesCapability, Void> CAPABILITY = EntityCapability.createVoid(Accessories.of("capability"), AccessoriesCapability.class);
-
-    static {
-        HOLDER_ATTACHMENT_TYPE = Registry.register(
-                NeoForgeRegistries.ATTACHMENT_TYPES,
-                Accessories.of("inventory_holder"),
-                AttachmentType.builder(AccessoriesHolderImpl::of)
-                        .serialize(InstanceCodecable.constructed(AccessoriesHolderImpl::new))
-                        .copyOnDeath()
-                        .build()
-        );
-    }
+    public static final Capability<AccessoriesHolderImpl> HOLDER_HANDLER = CapabilityManager.get(new CapabilityToken<>() {});
 
     public static IEventBus BUS;
 
@@ -72,22 +53,26 @@ public class AccessoriesForge {
 
         Accessories.setupConfig();
 
-        NeoForge.EVENT_BUS.addListener(this::onEntityDeath);
-        NeoForge.EVENT_BUS.addListener(this::onLivingEntityTick);
-        NeoForge.EVENT_BUS.addListener(this::onDataSync);
-        eventBus.addListener(this::registerCapabilities);
-        NeoForge.EVENT_BUS.addListener(this::onEntityLoad);
-        NeoForge.EVENT_BUS.addListener(this::onStartTracking);
-        NeoForge.EVENT_BUS.addListener(this::registerReloadListeners);
+        MinecraftForge.EVENT_BUS.addListener(this::onEntityDeath);
+        MinecraftForge.EVENT_BUS.addListener(this::onLivingEntityTick);
+        MinecraftForge.EVENT_BUS.addListener(this::onDataSync);
+        MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, this::registerCapabilities);
+        MinecraftForge.EVENT_BUS.addListener(this::onEntityLoad);
+        MinecraftForge.EVENT_BUS.addListener(this::onStartTracking);
+        MinecraftForge.EVENT_BUS.addListener(this::registerReloadListeners);
 
         eventBus.addListener(this::registerStuff);
 
-        NeoForge.EVENT_BUS.addListener(this::adjustLooting);
-        NeoForge.EVENT_BUS.addListener(this::onWorldTick);
+        MinecraftForge.EVENT_BUS.addListener(this::adjustLooting);
+        MinecraftForge.EVENT_BUS.addListener(this::onWorldTick);
 
         eventBus.register(AccessoriesForgeNetworkHandler.INSTANCE);
 
-        NeoForge.EVENT_BUS.addListener(this::registerCommands);
+        MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
+
+        AccessoriesForgeNetworkHandler.INSTANCE.initializeNetworking();
+
+        Accessories.registerCriteria();
     }
 
     public void attemptEquipFromUse(PlayerInteractEvent.RightClickItem event){
@@ -110,7 +95,6 @@ public class AccessoriesForge {
 
     public void registerStuff(RegisterEvent event){
         event.register(Registries.MENU, (helper) -> Accessories.registerMenuType());
-        event.register(Registries.TRIGGER_TYPE, (helper) -> Accessories.registerCriteria());
     }
 
     public void onEntityDeath(LivingDeathEvent event){
@@ -125,20 +109,36 @@ public class AccessoriesForge {
         AccessoriesEventHandler.dataSync(event.getPlayerList(), event.getPlayer());
     }
 
-    public void registerCapabilities(RegisterCapabilitiesEvent event){
-        for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
-            if(event.isEntityRegistered(CAPABILITY, entityType)) continue;
+    public void registerCapabilities(AttachCapabilitiesEvent<Entity> event){
+        if(!(event.getObject() instanceof LivingEntity)) return;
 
-            event.registerEntity(CAPABILITY, entityType, (entity, unused) -> {
-                if(!(entity instanceof LivingEntity livingEntity)) return null;
+        var holder = new AccessoriesHolderImpl();
+        var optionalHolder = LazyOptional.of(() -> holder);
 
-                var slots = EntitySlotLoader.getEntitySlots(livingEntity);
+        var provider = new ICapabilitySerializable<CompoundTag>() {
+            @Override
+            public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction arg) {
+                if(capability.equals(AccessoriesForge.HOLDER_HANDLER)) return optionalHolder.cast();
 
-                if(slots.isEmpty()) return null;
+                return LazyOptional.empty();
+            }
 
-                return new AccessoriesCapabilityImpl(livingEntity);
-            });
-        }
+            @Override
+            public CompoundTag serializeNBT() {
+                var tag = new CompoundTag();
+
+                holder.write(tag);
+
+                return tag;
+            }
+
+            @Override
+            public void deserializeNBT(CompoundTag arg) {
+                holder.read(arg);
+            }
+        };
+
+        event.addCapability(Accessories.of("capability"), provider);
     }
 
     public void onEntityLoad(EntityJoinLevelEvent event){

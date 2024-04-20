@@ -467,6 +467,6 @@ public class AccessoriesContainerImpl implements AccessoriesContainer, InstanceC
     }
 
     public static SimpleContainer copyContainerList(SimpleContainer container){
-        return new SimpleContainer(container.getItems().toArray(ItemStack[]::new));
+        return new SimpleContainer(container.removeAllItems().toArray(ItemStack[]::new));
     }
 }

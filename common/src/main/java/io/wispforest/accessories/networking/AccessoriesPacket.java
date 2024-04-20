@@ -1,16 +1,14 @@
 package io.wispforest.accessories.networking;
 
 import com.mojang.logging.LogUtils;
-import io.wispforest.accessories.Accessories;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import org.slf4j.Logger;
 
 import java.util.function.Supplier;
 
-public abstract class AccessoriesPacket implements CustomPacketPayload {
+public abstract class AccessoriesPacket {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -34,7 +32,6 @@ public abstract class AccessoriesPacket implements CustomPacketPayload {
         return packet;
     }
 
-    @Override
     public ResourceLocation id() {
         return AccessoriesNetworkHandler.getId(this.getClass());
     }

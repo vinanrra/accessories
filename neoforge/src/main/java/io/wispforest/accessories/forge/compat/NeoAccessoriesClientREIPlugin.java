@@ -1,4 +1,4 @@
-package io.wispforest.accessories.neoforge.compat;
+package io.wispforest.accessories.forge.compat;
 
 import io.wispforest.accessories.compat.rei.AccessoriesClientREIPlugin;
 import me.shedaniel.rei.forge.REIPluginClient;

@@ -55,7 +55,7 @@ public class AccessoriesClient {
         var player = Minecraft.getInstance().player;
 
         if(targetingLookingEntity) {
-            var result = ProjectileUtil.getHitResultOnViewVector(player, e -> e instanceof LivingEntity, (double) Player.getPickRange(player.isCreative()));
+            var result = ProjectileUtil.getHitResultOnViewVector(player, e -> e instanceof LivingEntity, (player.isCreative() ? 4.5 : 4));
 
             var bl = !(result instanceof EntityHitResult entityHitResult) ||
                     !(entityHitResult.getEntity() instanceof LivingEntity living)

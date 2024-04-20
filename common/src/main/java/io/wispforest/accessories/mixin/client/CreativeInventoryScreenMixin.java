@@ -4,6 +4,7 @@ import io.wispforest.accessories.Accessories;
 import io.wispforest.accessories.AccessoriesInternals;
 import io.wispforest.accessories.api.AccessoriesAPI;
 import io.wispforest.accessories.client.AccessoriesClient;
+import io.wispforest.accessories.client.GuiGraphicsUtils;
 import io.wispforest.accessories.client.gui.AccessoriesScreen;
 import io.wispforest.accessories.networking.server.NukeAccessories;
 import io.wispforest.accessories.networking.server.ScreenOpen;
@@ -55,7 +56,7 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
                         .tooltip(Tooltip.create(Component.translatable(Accessories.translation("open.screen"))))
                         .build()
         ).adjustRendering((button, guiGraphics, sprite, x, y, width, height) -> {
-            guiGraphics.blitSprite(AccessoriesScreen.SPRITES_8X8.get(button.active, button.isHoveredOrFocused()), x, y, width, height);
+            guiGraphics.blit(AccessoriesScreen.SPRITES_8X8.getLocation(button), x, y, width, height, 8, 8, 8, 8);
 
             return true;
         });

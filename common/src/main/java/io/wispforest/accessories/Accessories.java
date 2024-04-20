@@ -59,8 +59,8 @@ public class Accessories {
     }
 
     public static void registerCriteria(){
-        ACCESSORY_EQUIPPED = CriteriaTriggersAccessor.accessories$callRegister("accessories:equip_accessory", new AccessoryChangedCriterion());
-        ACCESSORY_UNEQUIPPED = CriteriaTriggersAccessor.accessories$callRegister("accessories:unequip_accessory", new AccessoryChangedCriterion());
+        ACCESSORY_EQUIPPED = CriteriaTriggersAccessor.accessories$callRegister(new AccessoryChangedCriterion(Accessories.of("equip_accessory")));
+        ACCESSORY_UNEQUIPPED = CriteriaTriggersAccessor.accessories$callRegister(new AccessoryChangedCriterion(Accessories.of("unequip_accessory")));
     }
 
     public static void registerMenuType() {
@@ -112,7 +112,7 @@ public class Accessories {
     }
 
     public static boolean attemptOpenScreenPlayer(ServerPlayer player) {
-        var result = ProjectileUtil.getHitResultOnViewVector(player, e -> e instanceof LivingEntity, (double) Player.getPickRange(player.isCreative()));
+        var result = ProjectileUtil.getHitResultOnViewVector(player, e -> e instanceof LivingEntity, (player.isCreative() ? 4.5 : 4));
 
         if(!(result instanceof EntityHitResult entityHitResult)) return false;
 

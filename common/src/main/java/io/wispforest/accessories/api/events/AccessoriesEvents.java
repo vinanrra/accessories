@@ -10,7 +10,7 @@ import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.ICancellableEvent;
+import net.minecraftforge.eventbus.api.Cancelable;
 import org.jetbrains.annotations.Nullable;
 
 public class AccessoriesEvents {
@@ -31,9 +31,11 @@ public class AccessoriesEvents {
 
                 if(bus.isEmpty()) return state;
 
-                return bus.get()
-                        .post(new OnDeathEvent(livingEntity, capability))
-                        .getReturn();
+                var event = new OnDeathEvent(livingEntity, capability);
+
+                bus.get().post(event);
+
+                return event.getReturn();
             }
     );
 
@@ -49,6 +51,8 @@ public class AccessoriesEvents {
         private final AccessoriesCapability capability;
 
         public OnDeathEvent(LivingEntity entity, AccessoriesCapability capability) {
+            super();
+
             this.entity = entity;
             this.capability = capability;
         }
@@ -80,9 +84,11 @@ public class AccessoriesEvents {
 
                 if(bus.isEmpty()) return currentRule;
 
-                return bus.get()
-                        .post(new OnDropEvent(dropRule, stack, reference))
-                        .dropRule();
+                var event = new OnDropEvent(dropRule, stack, reference);
+
+                bus.get().post(event);
+
+                return event.dropRule();
             }
     );
 
@@ -93,7 +99,8 @@ public class AccessoriesEvents {
     /**
      * Neoforge Ecosystem event in which fired directly from {@link #ON_DROP_EVENT} call using the main Neoforge Event Bus
      */
-    public static class OnDropEvent extends net.neoforged.bus.api.Event implements ICancellableEvent, SlotEntryReferenced {
+    @Cancelable
+    public static class OnDropEvent extends net.minecraftforge.eventbus.api.Event implements SlotEntryReferenced {
         private DropRule dropRule;
 
         private final SlotReference reference;
@@ -101,6 +108,8 @@ public class AccessoriesEvents {
         private final ItemStack stack;
 
         public OnDropEvent(DropRule dropRule, ItemStack stack, SlotReference reference) {
+            super();
+
             this.dropRule = dropRule;
 
             this.reference = reference;
@@ -146,9 +155,9 @@ public class AccessoriesEvents {
                     }
 
                     if(bus.isPresent()) {
-                        state = bus.get()
-                                .post(new CanEquipEvent(stack1, reference1))
-                                .getReturn();
+                        var event = new CanEquipEvent(stack1, reference1);
+
+                        if(bus.get().post(event)) state = event.getReturn();
                     }
 
                     return state != TriState.DEFAULT ? state : null;
@@ -165,11 +174,14 @@ public class AccessoriesEvents {
     /**
      * Neoforge Ecosystem event in which fired directly from {@link #CAN_EQUIP_EVENT} call using the main Neoforge Event Bus
      */
+    @Cancelable
     public static class CanEquipEvent extends ReturnableEvent implements SlotEntryReferenced {
         private final SlotReference reference;
         private final ItemStack stack;
 
         public CanEquipEvent(ItemStack stack, SlotReference reference) {
+            super();
+
             this.reference = reference;
             this.stack = stack;
         }
@@ -202,9 +214,9 @@ public class AccessoriesEvents {
                     }
 
                     if(bus.isPresent()) {
-                        state = bus.get()
-                                .post(new CanUnequipEvent(stack1, reference1))
-                                .getReturn();
+                        var event = new CanUnequipEvent(stack1, reference1);
+
+                        if(bus.get().post(event)) state = event.getReturn();
                     }
 
                     return state != TriState.DEFAULT ? state : null;
@@ -221,11 +233,14 @@ public class AccessoriesEvents {
     /**
      * Neoforge Ecosystem event in which fired directly from {@link #CAN_UNEQUIP_EVENT} call using the main Neoforge Event Bus
      */
+    @Cancelable
     public static class CanUnequipEvent extends ReturnableEvent implements SlotEntryReferenced {
         private final SlotReference reference;
         private final ItemStack stack;
 
         public CanUnequipEvent(ItemStack stack, SlotReference reference) {
+            super();
+
             this.reference = reference;
             this.stack = stack;
         }
@@ -254,9 +269,9 @@ public class AccessoriesEvents {
                 }
 
                 if(bus.isPresent()) {
-                    state = bus.get()
-                            .post(new OnEntityModificationEvent(targetEntity, player, reference))
-                            .getReturn();
+                    var event = new OnEntityModificationEvent(targetEntity, player, reference);
+
+                    if(bus.get().post(event)) state = event.getReturn();
                 }
 
                 if(state == TriState.FALSE) return state;
@@ -269,6 +284,7 @@ public class AccessoriesEvents {
         TriState checkModifiability(LivingEntity targetEntity, Player player, @Nullable SlotReference reference);
     }
 
+    @Cancelable
     public static class OnEntityModificationEvent extends ReturnableEvent implements SlotReferenced {
         private final LivingEntity targetEntity;
         private final Player player;
@@ -277,6 +293,8 @@ public class AccessoriesEvents {
         private final SlotReference reference;
 
         public OnEntityModificationEvent(LivingEntity targetEntity, Player player, @Nullable SlotReference reference) {
+            super();
+
             this.reference = reference;
 
             this.targetEntity = targetEntity;
@@ -309,8 +327,13 @@ public class AccessoriesEvents {
         ItemStack stack();
     }
 
-    private static class ReturnableEvent extends net.neoforged.bus.api.Event implements ICancellableEvent {
+    @Cancelable
+    private static class ReturnableEvent extends net.minecraftforge.eventbus.api.Event {
         private TriState returnState = TriState.DEFAULT;
+
+        public ReturnableEvent(){
+            super();
+        }
 
         public final ReturnableEvent setReturn(TriState returnState){
             this.returnState = returnState;

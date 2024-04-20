@@ -1,27 +1,27 @@
-package io.wispforest.accessories.neoforge.client;
+package io.wispforest.accessories.forge.client;
 
 import io.wispforest.accessories.api.client.AccessoriesRendererRegistry;
 import io.wispforest.accessories.client.AccessoriesClient;
 import io.wispforest.accessories.compat.AccessoriesConfig;
 import io.wispforest.accessories.impl.AccessoriesEventHandler;
-import io.wispforest.accessories.neoforge.AccessoriesForge;
+import io.wispforest.accessories.forge.AccessoriesForge;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModLoadingContext;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.ConfigScreenHandler;
-import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
-import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.TickEvent;
-import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.ConfigScreenHandler;
+import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -38,8 +38,8 @@ public class AccessoriesClientForge {
         event.enqueueWork(() -> {
             AccessoriesClient.init();
 
-            NeoForge.EVENT_BUS.addListener(AccessoriesClientForge::clientTick);
-            NeoForge.EVENT_BUS.addListener(AccessoriesClientForge::itemTooltipCallback);
+            MinecraftForge.EVENT_BUS.addListener(AccessoriesClientForge::clientTick);
+            MinecraftForge.EVENT_BUS.addListener(AccessoriesClientForge::itemTooltipCallback);
 
             AccessoriesForge.BUS.addListener(AccessoriesClientForge::registerClientReloadListeners);
 

@@ -1,4 +1,4 @@
-package io.wispforest.accessories.neoforge.mixin;
+package io.wispforest.accessories.forge.mixin;
 
 import io.wispforest.accessories.client.AccessoriesRenderLayer;
 import net.minecraft.client.model.EntityModel;

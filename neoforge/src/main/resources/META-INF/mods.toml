@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[1,)"
+loaderVersion = "[47,)"
 #issueTrackerURL = ""
 license = "MIT"
 
@@ -20,22 +20,22 @@ config = 'accessories-common.mixins.json'
 config = 'accessories-forge.mixins.json'
 
 [[dependencies.accessories]]
-modId = "neoforge"
-required = true
-versionRange = "[20,)"
+modId = "forge"
+mandatory = true
+versionRange = "[47,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.accessories]]
 modId = "minecraft"
-required = true
-versionRange = "[1.20.4,)"
+mandatory = true
+versionRange = "[1.20.1,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.accessories]]
 modId = "cloth_config"
-required = true
-versionRange = "[13,)"
+mandatory = true
+versionRange = "[11,)"
 ordering = "NONE"
 side = "BOTH"

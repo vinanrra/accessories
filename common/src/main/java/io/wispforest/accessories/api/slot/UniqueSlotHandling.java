@@ -50,7 +50,7 @@ public class UniqueSlotHandling {
         bus.ifPresent(eventBus -> eventBus.post(new InitializeSlotTypesEvent(registration)));
     });
 
-    public static final class InitializeSlotTypesEvent extends net.neoforged.bus.api.Event implements UniqueSlotRegistration {
+    public static final class InitializeSlotTypesEvent extends net.minecraftforge.eventbus.api.Event implements UniqueSlotRegistration {
         private final UniqueSlotRegistration registration;
 
         public InitializeSlotTypesEvent(UniqueSlotRegistration registration){

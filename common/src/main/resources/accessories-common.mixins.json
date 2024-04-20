@@ -17,7 +17,6 @@
     "ApplyBonusCountMixin",
     "CriteriaTriggersAccessor",
     "EndermanMixin",
-    "GuiGraphicsAccessor",
     "InventoryMixin",
     "LivingEntityAccessor",
     "LivingEntityMixin",
