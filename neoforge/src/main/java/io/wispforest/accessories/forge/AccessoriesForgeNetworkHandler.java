@@ -95,6 +95,8 @@ public class AccessoriesForgeNetworkHandler extends AccessoriesNetworkHandler {
                     }
                 }
         );
+
+        i++;
     }
 
     private static <T> BiConsumer<T, Supplier<NetworkEvent.Context>> server(ResourceLocation id, BiConsumer<T, Player> handler) {
