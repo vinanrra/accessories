@@ -109,7 +109,7 @@ public class AccessoriesForgeNetworkHandler extends AccessoriesNetworkHandler {
                 return;
             }
 
-            handler.accept(packet, context.get().getSender());
+            context.get().enqueueWork(() -> handler.accept(packet, context.get().getSender()));
 
             context.get().setPacketHandled(true);
         };

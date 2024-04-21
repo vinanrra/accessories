@@ -12,7 +12,7 @@ import top.theillusivec4.curios.common.data.CuriosSlotManager;
 import java.util.function.Consumer;
 
 @Pseudo
-@Mixin(targets = "io/wispforest/accessories/neoforge/AccessoriesForge")
+@Mixin(targets = "io/wispforest/accessories/forge/AccessoriesForge")
 public abstract class AccessoriesForgeMixin {
 
     @Inject(method = "intermediateRegisterListeners", at = @At("HEAD"), remap = false)

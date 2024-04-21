@@ -22,11 +22,7 @@ import java.util.UUID;
 
 public class WrappedICurioProvider implements Accessory, LootingAdjustment, FortuneAdjustment, AllowWalingOnSnow, EndermanMasked, PiglinNeutralInducer {
 
-    private final ICapabilityProvider icurioProvider;
-
-    public WrappedICurioProvider(ICapabilityProvider icurioProvider){
-        this.icurioProvider = icurioProvider;
-    }
+    public WrappedICurioProvider() {}
 
     public ICurio iCurio(ItemStack stack){
         return stack.getCapability(CuriosCapability.ITEM).orElse(null);

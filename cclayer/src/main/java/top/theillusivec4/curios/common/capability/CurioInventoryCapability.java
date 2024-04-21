@@ -31,7 +31,7 @@ public class CurioInventoryCapability {
 
         Provider(final LivingEntity livingEntity) {
             this.wearer = livingEntity;
-            this.handler = new WrappedCurioItemHandler((AccessoriesCapabilityImpl) this.wearer.accessoriesCapability());
+            this.handler = new WrappedCurioItemHandler(() -> (AccessoriesCapabilityImpl) this.wearer.accessoriesCapability());
             this.optional = LazyOptional.of(() -> this.handler);
         }
 

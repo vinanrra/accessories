@@ -6,12 +6,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 
 import java.util.function.Consumer;
 
 @Pseudo
-@Mixin(targets = "io/wispforest/accessories/neoforge/AccessoriesForge", remap = false)
+@Mixin(targets = "io/wispforest/accessories/forge/AccessoriesForge", remap = false)
 public abstract class AccessoriesForgeMixin {
 
     @Inject(method = "intermediateRegisterListeners", at = @At("HEAD"))

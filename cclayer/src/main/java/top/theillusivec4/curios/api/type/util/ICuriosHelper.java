@@ -73,7 +73,7 @@ public interface ICuriosHelper {
    */
   @Deprecated(since = "1.20.1", forRemoval = true)
   @ApiStatus.ScheduledForRemoval(inVersion = "1.22")
-  Optional<IItemHandlerModifiable> getEquippedCurios(LivingEntity livingEntity);
+  LazyOptional<IItemHandlerModifiable> getEquippedCurios(LivingEntity livingEntity);
 
   /**
    * @deprecated See {@link ICuriosItemHandler#setEquippedCurio(String, int, ItemStack)}

@@ -18,6 +18,7 @@ import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
@@ -31,6 +32,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,6 +60,7 @@ public class AccessoriesForge {
         MinecraftForge.EVENT_BUS.addListener(this::onLivingEntityTick);
         MinecraftForge.EVENT_BUS.addListener(this::onDataSync);
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, this::registerCapabilities);
+        MinecraftForge.EVENT_BUS.addListener(this::registerCapability);
         MinecraftForge.EVENT_BUS.addListener(this::onEntityLoad);
         MinecraftForge.EVENT_BUS.addListener(this::onStartTracking);
         MinecraftForge.EVENT_BUS.addListener(this::registerReloadListeners);
@@ -110,16 +113,20 @@ public class AccessoriesForge {
         AccessoriesEventHandler.dataSync(event.getPlayerList(), event.getPlayer());
     }
 
-    public void registerCapabilities(AttachCapabilitiesEvent<Entity> event){
-        if(!(event.getObject() instanceof LivingEntity)) return;
+    public void registerCapability(RegisterCapabilitiesEvent event) {
+        event.register(AccessoriesHolderImpl.class);
+    }
 
-        var holder = new AccessoriesHolderImpl();
-        var optionalHolder = LazyOptional.of(() -> holder);
+    public void registerCapabilities(AttachCapabilitiesEvent<Entity> event) {
+        if (!(event.getObject() instanceof LivingEntity)) return;
 
         var provider = new ICapabilitySerializable<CompoundTag>() {
+            final AccessoriesHolderImpl holder = AccessoriesHolderImpl.of();
+            final LazyOptional<AccessoriesHolderImpl> optionalHolder = LazyOptional.of(() -> holder);
+
             @Override
             public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction arg) {
-                if(capability.equals(AccessoriesForge.HOLDER_HANDLER)) return optionalHolder.cast();
+                if (capability.equals(AccessoriesForge.HOLDER_HANDLER)) return optionalHolder.cast();
 
                 return LazyOptional.empty();
             }

@@ -6,7 +6,7 @@ base {
     archivesName = project.archives_base_name
 }
 
-version = "${project.mod_version}-${project.layer_version}"
+version = "${project.mod_version}-${project.layer_version}+${rootProject.minecraft_base_version}"
 group = project.maven_group
 
 architectury {
@@ -44,8 +44,8 @@ dependencies {
     modLocalRuntime("io.wispforest:owo-lib:0.12.4-pre.2+1.20.3")
     modLocalRuntime("io.wispforest:gadget:0.2.3+1.20.3")
 
-    include modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.4.0")
-    include modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.4.0")
+    include modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.2")
+    include modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.2.2")
 
 //    modCompileOnly ("maven.modrinth:things:0.3.3+1.20.3") {
 //        exclude group: "dev.emi"

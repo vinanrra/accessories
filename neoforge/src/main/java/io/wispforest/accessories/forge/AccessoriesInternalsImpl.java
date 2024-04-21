@@ -37,7 +37,7 @@ import java.util.function.UnaryOperator;
 public class AccessoriesInternalsImpl {
 
     public static AccessoriesHolder getHolder(LivingEntity livingEntity){
-        return livingEntity.getCapability(AccessoriesForge.HOLDER_HANDLER).orElseThrow(() -> new IllegalStateException("Unable to get the AccessoriesHolder from the passed LivingEntity"));
+        return livingEntity.getCapability(AccessoriesForge.HOLDER_HANDLER).orElseGet(AccessoriesHolderImpl::of);
     }
 
     public static void modifyHolder(LivingEntity livingEntity, UnaryOperator<AccessoriesHolderImpl> modifier){
