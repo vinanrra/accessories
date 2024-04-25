@@ -31,10 +31,6 @@ import java.util.function.Supplier;
 
 public record WrappedCurioItemHandler(Supplier<AccessoriesCapabilityImpl> capabilitySup) implements ICuriosItemHandler {
 
-    public WrappedCurioItemHandler(Supplier<AccessoriesCapabilityImpl> capabilitySup) {
-        this.capabilitySup = capabilitySup;
-    }
-
     public AccessoriesCapabilityImpl capability() {
         var capability = this.capabilitySup.get();
 
@@ -62,8 +58,7 @@ public record WrappedCurioItemHandler(Supplier<AccessoriesCapabilityImpl> capabi
     }
 
     @Override
-    public void setCurios(Map<String, ICurioStacksHandler> map) {
-    }
+    public void setCurios(Map<String, ICurioStacksHandler> map) {}
 
     @Override
     public int getSlots() {

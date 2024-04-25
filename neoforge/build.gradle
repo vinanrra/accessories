@@ -45,6 +45,7 @@ dependencies {
     modApi("me.shedaniel.cloth:cloth-config-forge:${rootProject.cloth_version}")
 
     include modApi("dev.su5ed.sinytra.fabric-api:fabric-api-base:0.4.31+ef105b4977"){ exclude group: "fabric-api" }
+    include modApi("dev.su5ed.sinytra.fabric-api:fabric-data-attachment-api-v1:1.0.0+30ef839e77"){ exclude group: "fabric-api" } //0.3.37+a6081afc77
 
     testmodImplementation sourceSets.main.output
 

@@ -5,6 +5,7 @@ import io.wispforest.accessories.api.AccessoriesHolder;
 import io.wispforest.accessories.client.AccessoriesMenu;
 import io.wispforest.accessories.impl.AccessoriesHolderImpl;
 import io.wispforest.accessories.networking.AccessoriesNetworkHandler;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -37,11 +38,15 @@ import java.util.function.UnaryOperator;
 public class AccessoriesInternalsImpl {
 
     public static AccessoriesHolder getHolder(LivingEntity livingEntity){
-        return livingEntity.getCapability(AccessoriesForge.HOLDER_HANDLER).orElseGet(AccessoriesHolderImpl::of);
+        return ((AttachmentTarget) livingEntity).getAttachedOrCreate(AccessoriesForge.HOLDER_ATTACHMENT_TYPE);
     }
 
     public static void modifyHolder(LivingEntity livingEntity, UnaryOperator<AccessoriesHolderImpl> modifier){
-        modifier.apply((AccessoriesHolderImpl) getHolder(livingEntity));
+        var holder = (AccessoriesHolderImpl) getHolder(livingEntity);
+
+        holder = modifier.apply(holder);
+
+        ((AttachmentTarget) livingEntity).setAttached(AccessoriesForge.HOLDER_ATTACHMENT_TYPE, holder);
     }
 
     public static AccessoriesNetworkHandler getNetworkHandler(){

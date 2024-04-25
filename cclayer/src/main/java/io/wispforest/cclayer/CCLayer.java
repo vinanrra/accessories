@@ -1,25 +1,16 @@
 package io.wispforest.cclayer;
 
 import io.wispforest.accessories.api.AccessoriesAPI;
-import io.wispforest.accessories.api.AccessoriesCapability;
-import io.wispforest.accessories.data.EntitySlotLoader;
-import io.wispforest.accessories.impl.AccessoriesCapabilityImpl;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStoppedEvent;
-import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -32,14 +23,9 @@ import top.theillusivec4.curios.api.type.capability.ICurio;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.common.CuriosHelper;
-import top.theillusivec4.curios.common.CuriosRegistry;
 import top.theillusivec4.curios.common.capability.CurioInventoryCapability;
-import top.theillusivec4.curios.common.capability.CurioItemHandler;
-import top.theillusivec4.curios.common.capability.ItemizedCurioCapability;
 import top.theillusivec4.curios.common.data.CuriosSlotManager;
 import top.theillusivec4.curios.common.slottype.LegacySlotManager;
-import top.theillusivec4.curios.compat.WrappedAccessory;
-import top.theillusivec4.curios.compat.WrappedCurioItemHandler;
 import top.theillusivec4.curios.compat.WrappedICurioProvider;
 import top.theillusivec4.curios.mixin.CuriosImplMixinHooks;
 import top.theillusivec4.curios.server.SlotHelper;
@@ -79,7 +65,7 @@ public class CCLayer {
     }
 
     public void attachEntitiesCapabilities(AttachCapabilitiesEvent<Entity> evt) {
-        if (evt.getObject() instanceof LivingEntity livingEntity && !EntitySlotLoader.getEntitySlots(livingEntity).isEmpty()) {
+        if (evt.getObject() instanceof LivingEntity livingEntity) {
             evt.addCapability(CuriosCapability.ID_INVENTORY, CurioInventoryCapability.createProvider(livingEntity));
         }
     }
@@ -87,20 +73,24 @@ public class CCLayer {
     private boolean attemptRegister = false;
 
     public void onWorldTick(TickEvent.LevelTickEvent event) {
-        if(!event.type.equals(TickEvent.Type.SERVER) || !event.phase.equals(TickEvent.Phase.START) || attemptRegister) return;
+        if(!event.phase.equals(TickEvent.Phase.START) || attemptRegister) return;
 
         for (Item item : ForgeRegistries.ITEMS) {
             var defaultStack = item.getDefaultInstance();
 
-            var iCurio = defaultStack.getCapability(CuriosCapability.ITEM);
-
             if(CuriosImplMixinHooks.getCurioFromRegistry(item).isEmpty() && item instanceof ICurioItem iCurioItem){
                 CuriosImplMixinHooks.registerCurio(item, iCurioItem);
+
+                continue;
             }
 
-            if(AccessoriesAPI.getAccessory(item) != null) return;
+            if(AccessoriesAPI.getAccessory(item) != null) {
+                continue;
+            }
 
-            if(iCurio.isPresent()) AccessoriesAPI.registerAccessory(item, new WrappedICurioProvider());
+            if(defaultStack.getCapability(CuriosCapability.ITEM).isPresent()) {
+                AccessoriesAPI.registerAccessory(item, new WrappedICurioProvider());
+            }
         }
 
         attemptRegister = true;

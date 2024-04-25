@@ -27,6 +27,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -39,6 +40,7 @@ import top.theillusivec4.curios.api.type.ISlotType;
 import top.theillusivec4.curios.api.type.capability.ICurio;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
+import top.theillusivec4.curios.common.capability.CurioItemCapability;
 import top.theillusivec4.curios.mixin.CuriosImplMixinHooks;
 
 import java.util.Map;
@@ -98,6 +100,12 @@ public class MixinCuriosApi {
   private static void curios$getCurio(ItemStack stack,
                                       CallbackInfoReturnable<LazyOptional<ICurio>> cir) {
     cir.setReturnValue(CuriosImplMixinHooks.getCurio(stack));
+  }
+
+  @Inject(at = @At("HEAD"), method = "createCurioProvider", cancellable = true)
+  private static void curios$createCurio(ICurio curio,
+                                         CallbackInfoReturnable<ICapabilityProvider> cir) {
+    cir.setReturnValue(CurioItemCapability.createProvider(curio));
   }
 
   @Inject(at = @At("HEAD"), method = "getCuriosInventory", cancellable = true)

@@ -26,6 +26,7 @@ import io.wispforest.accessories.api.AccessoriesAPI;
 import io.wispforest.accessories.api.slot.SlotReference;
 import io.wispforest.accessories.data.EntitySlotLoader;
 import io.wispforest.accessories.data.SlotTypeLoader;
+import io.wispforest.accessories.impl.AccessoriesCapabilityImpl;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -50,10 +51,7 @@ import top.theillusivec4.curios.api.type.capability.ICurioItem;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.common.capability.ItemizedCurioCapability;
 import top.theillusivec4.curios.common.slottype.SlotType;
-import top.theillusivec4.curios.compat.CuriosWrappingUtils;
-import top.theillusivec4.curios.compat.WrappedAccessory;
-import top.theillusivec4.curios.compat.WrappedCurio;
-import top.theillusivec4.curios.compat.WrappedSlotType;
+import top.theillusivec4.curios.compat.*;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -194,8 +192,10 @@ public class CuriosImplMixinHooks {
   }
 
   public static LazyOptional<ICuriosItemHandler> getCuriosInventory(LivingEntity livingEntity) {
-    if (livingEntity != null) {
-      return livingEntity.getCapability(CuriosCapability.INVENTORY);
+    var accessoryCapability = (AccessoriesCapabilityImpl) livingEntity.accessoriesCapability();
+
+    if (accessoryCapability != null) {
+      return LazyOptional.of(() -> new WrappedCurioItemHandler(() -> accessoryCapability));
     } else {
       return LazyOptional.empty();
     }

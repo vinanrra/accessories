@@ -36,27 +36,21 @@ public class AccessoriesClientForge {
 
     @SubscribeEvent
     public static void onInitializeClient(FMLClientSetupEvent event) {
-        event.enqueueWork(() -> {
-            AccessoriesClient.init();
+        AccessoriesClient.init();
 
-            MinecraftForge.EVENT_BUS.addListener(AccessoriesClientForge::clientTick);
-            MinecraftForge.EVENT_BUS.addListener(AccessoriesClientForge::itemTooltipCallback);
+        MinecraftForge.EVENT_BUS.addListener(AccessoriesClientForge::clientTick);
+        MinecraftForge.EVENT_BUS.addListener(AccessoriesClientForge::itemTooltipCallback);
 
-            AccessoriesForge.BUS.addListener(AccessoriesClientForge::registerClientReloadListeners);
-
-            ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> {
-                return new ConfigScreenHandler.ConfigScreenFactory((minecraft, parent) -> AutoConfig.getConfigScreen(AccessoriesConfig.class, parent).get());
-            });
+        ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> {
+            return new ConfigScreenHandler.ConfigScreenFactory((minecraft, parent) -> AutoConfig.getConfigScreen(AccessoriesConfig.class, parent).get());
         });
     }
 
+    @SubscribeEvent
     public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
         event.registerReloadListener(new SimplePreparableReloadListener<Void>() {
-            @Override protected Void prepare(ResourceManager resourceManager, ProfilerFiller profiler) { return null; }
-            @Override
-            protected void apply(Void object, ResourceManager resourceManager, ProfilerFiller profiler) {
-                AccessoriesRendererRegistry.onReload();
-            }
+            @Override protected Void prepare(ResourceManager manager, ProfilerFiller profiler) { return null; }
+            @Override protected void apply(Void object, ResourceManager manager, ProfilerFiller profiler) { AccessoriesRendererRegistry.onReload(); }
         });
     }
 

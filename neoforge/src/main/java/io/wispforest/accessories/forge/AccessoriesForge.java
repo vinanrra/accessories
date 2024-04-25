@@ -8,6 +8,9 @@ import io.wispforest.accessories.data.SlotGroupLoader;
 import io.wispforest.accessories.data.SlotTypeLoader;
 import io.wispforest.accessories.impl.AccessoriesEventHandler;
 import io.wispforest.accessories.impl.AccessoriesHolderImpl;
+import io.wispforest.accessories.impl.InstanceCodecable;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -45,7 +48,15 @@ public class AccessoriesForge {
 
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static final Capability<AccessoriesHolderImpl> HOLDER_HANDLER = CapabilityManager.get(new CapabilityToken<>() {});
+    public static final AttachmentType<AccessoriesHolderImpl> HOLDER_ATTACHMENT_TYPE;
+
+    static {
+        HOLDER_ATTACHMENT_TYPE = AttachmentRegistry.<AccessoriesHolderImpl>builder()
+                .initializer(AccessoriesHolderImpl::of)
+                .persistent(InstanceCodecable.constructed(AccessoriesHolderImpl::new))
+                .copyOnDeath()
+                .buildAndRegister(Accessories.of("inventory_holder"));
+    }
 
     public static IEventBus BUS;
 
@@ -59,8 +70,6 @@ public class AccessoriesForge {
         MinecraftForge.EVENT_BUS.addListener(this::onEntityDeath);
         MinecraftForge.EVENT_BUS.addListener(this::onLivingEntityTick);
         MinecraftForge.EVENT_BUS.addListener(this::onDataSync);
-        MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, this::registerCapabilities);
-        MinecraftForge.EVENT_BUS.addListener(this::registerCapability);
         MinecraftForge.EVENT_BUS.addListener(this::onEntityLoad);
         MinecraftForge.EVENT_BUS.addListener(this::onStartTracking);
         MinecraftForge.EVENT_BUS.addListener(this::registerReloadListeners);
@@ -111,42 +120,6 @@ public class AccessoriesForge {
 
     public void onDataSync(OnDatapackSyncEvent event){
         AccessoriesEventHandler.dataSync(event.getPlayerList(), event.getPlayer());
-    }
-
-    public void registerCapability(RegisterCapabilitiesEvent event) {
-        event.register(AccessoriesHolderImpl.class);
-    }
-
-    public void registerCapabilities(AttachCapabilitiesEvent<Entity> event) {
-        if (!(event.getObject() instanceof LivingEntity)) return;
-
-        var provider = new ICapabilitySerializable<CompoundTag>() {
-            final AccessoriesHolderImpl holder = AccessoriesHolderImpl.of();
-            final LazyOptional<AccessoriesHolderImpl> optionalHolder = LazyOptional.of(() -> holder);
-
-            @Override
-            public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction arg) {
-                if (capability.equals(AccessoriesForge.HOLDER_HANDLER)) return optionalHolder.cast();
-
-                return LazyOptional.empty();
-            }
-
-            @Override
-            public CompoundTag serializeNBT() {
-                var tag = new CompoundTag();
-
-                holder.write(tag);
-
-                return tag;
-            }
-
-            @Override
-            public void deserializeNBT(CompoundTag arg) {
-                holder.read(arg);
-            }
-        };
-
-        event.addCapability(Accessories.of("capability"), provider);
     }
 
     public void onEntityLoad(EntityJoinLevelEvent event){
