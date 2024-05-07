@@ -2,12 +2,14 @@ package io.wispforest.accessories.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.wispforest.accessories.Accessories;
+import io.wispforest.accessories.AccessoriesInternals;
+import io.wispforest.accessories.api.menu.AccessoriesBasedSlot;
 import io.wispforest.accessories.client.GuiGraphicsUtils;
+import io.wispforest.accessories.networking.server.SyncCosmeticToggle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
@@ -41,6 +43,29 @@ public class ToggleButton extends Button {
 
         this.zIndex = zIndex;
         this.onRender = onRender;
+    }
+
+    public static ToggleButton ofSlot(int x, int y, int z, AccessoriesBasedSlot slot) {
+        return ToggleButton.toggleBuilder(Component.empty(), btn -> {
+                    AccessoriesInternals.getNetworkHandler().sendToServer(new SyncCosmeticToggle(slot.accessoriesContainer.slotType(), slot.getContainerSlot()));
+                }).onRender(btn -> {
+                    var bl = slot.accessoriesContainer.shouldRender(slot.getContainerSlot());
+
+                    if (bl == btn.toggled()) return;
+
+                    btn.toggled(bl);
+                    btn.setTooltip(accessoriesToggleTooltip(bl));
+                }).tooltip(accessoriesToggleTooltip(slot.accessoriesContainer.shouldRender(slot.getContainerSlot())))
+                .zIndex(z)
+                .bounds(x, y, 5, 5)
+                .build()
+                .toggled(slot.accessoriesContainer.shouldRender(slot.getContainerSlot()));
+    }
+
+    private static Tooltip accessoriesToggleTooltip(boolean value) {
+        var key = "display.toggle." + (!value ? "show" : "hide");
+
+        return Tooltip.create(Component.translatable(Accessories.translation(key)));
     }
 
     public ToggleButton toggled(boolean value){

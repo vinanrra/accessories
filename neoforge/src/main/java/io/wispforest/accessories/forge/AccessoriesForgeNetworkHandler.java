@@ -5,11 +5,13 @@ import io.wispforest.accessories.Accessories;
 import io.wispforest.accessories.networking.AccessoriesNetworkHandler;
 import io.wispforest.accessories.networking.AccessoriesPacket;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.Connection;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
@@ -146,5 +148,15 @@ public class AccessoriesForgeNetworkHandler extends AccessoriesNetworkHandler {
     @Override
     public <M extends AccessoriesPacket> void sendToTrackingAndSelf(Entity entity, Supplier<M> packet) {
         this.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), packet.get());
+    }
+
+    //--
+
+    public <M extends AccessoriesPacket> void sendWithDistributor(PacketDistributor.PacketTarget target, M message){
+        this.channel.send(target, message);
+    }
+
+    public <M extends AccessoriesPacket> void sendWithConnection(Connection manager, NetworkDirection direction, M message) {
+        this.channel.sendTo(message, manager, direction);
     }
 }

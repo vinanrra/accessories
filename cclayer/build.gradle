@@ -32,10 +32,12 @@ dependencies {
     forge "net.neoforged:forge:${rootProject.neoforge_version}"
 
     developmentForge implementation(project(path: ":common", configuration: "namedElements"))
-    localRuntime(project(path: ":neoforge", configuration: "namedElements"))
+    localRuntime compileOnly(project(path: ":neoforge", configuration: "namedElements"))
 
     compileOnly annotationProcessor("io.github.llamalad7:mixinextras-common:0.3.5")
     implementation include("io.github.llamalad7:mixinextras-forge:0.3.5")
+
+    modCompileOnly ("maven.modrinth:aether:1.20.1-1.4.2-neoforge")
 
     modRuntimeOnly ("me.shedaniel.cloth:cloth-config-forge:${rootProject.cloth_version}")
 
