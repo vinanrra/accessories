@@ -4,7 +4,9 @@ plugins {
 
 architectury {
     platformSetupLoomIde()
-    forge()
+    forge {
+        platformPackage = "forge"
+    }
 }
 
 configurations {
@@ -134,6 +136,7 @@ shadowJar {
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
+    archiveClassifier.set "neoforge"
 }
 
 sourcesJar {
@@ -153,7 +156,7 @@ def ENV = System.getenv()
 publishing {
     publications {
         mavenForge(MavenPublication) {
-            artifactId = rootProject.archives_base_name + "-" + project.name
+            artifactId = "${rootProject.archives_base_name}-${project.name}-neoforge"
             from components.java
         }
     }
