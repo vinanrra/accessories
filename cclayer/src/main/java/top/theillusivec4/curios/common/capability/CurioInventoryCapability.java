@@ -47,14 +47,19 @@ public class CurioInventoryCapability {
 
         @Override
         public Tag serializeNBT() {
+            if (CuriosApi.getEntitySlots(this.wearer.getType()).isEmpty()) {
+                return new CompoundTag();
+            }
+
             return this.handler.writeTag();
         }
 
         @Override
         public void deserializeNBT(Tag nbt) {
-            if(!(nbt instanceof CompoundTag compoundTag)) return;
+            if (!(nbt instanceof CompoundTag compoundTag)) return;
+            //if (CuriosApi.getEntitySlots(this.wearer.getType()).isEmpty()) return;
 
-            var inv = new CurioInventory();
+            var inv = new CurioInventory(new AccessoriesCapabilityImpl(this.wearer));
 
             inv.deserializeNBT(compoundTag);
 

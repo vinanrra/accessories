@@ -3,6 +3,7 @@ package top.theillusivec4.curios.common.capability;
 import io.wispforest.accessories.api.AccessoriesAPI;
 import io.wispforest.accessories.api.AccessoriesContainer;
 import io.wispforest.accessories.data.SlotTypeLoader;
+import io.wispforest.accessories.impl.AccessoriesCapabilityImpl;
 import io.wispforest.accessories.impl.AccessoriesHolderImpl;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -19,16 +20,15 @@ import java.util.function.Function;
 
 public class CurioInventory implements INBTSerializable<CompoundTag> {
 
-    public CurioInventory() {
-
+    private final AccessoriesCapabilityImpl capability;
+    public CurioInventory(AccessoriesCapabilityImpl capability) {
+        this.capability = capability;
     }
 
     CompoundTag deserialized = new CompoundTag();
     boolean markDeserialized = false;
 
     public void init(final ICuriosItemHandler curiosItemHandler) {
-        var capability = ((WrappedCurioItemHandler) curiosItemHandler).capability();
-
         var livingEntity = capability.entity();
 
         if (this.markDeserialized) {
