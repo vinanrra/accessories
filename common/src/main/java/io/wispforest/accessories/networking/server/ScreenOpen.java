@@ -11,6 +11,7 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
@@ -65,14 +66,14 @@ public class ScreenOpen extends AccessoriesPacket {
 
         ItemStack carriedStack = null;
 
-        if(player.containerMenu instanceof AccessoriesMenu oldMenu) {
-            var currentCarriedStack = oldMenu.getCarried();
+        var oldMenu = player.containerMenu;
 
-            if(!currentCarriedStack.isEmpty()) {
-                carriedStack = currentCarriedStack;
+        var currentCarriedStack = oldMenu.getCarried();
 
-                oldMenu.setCarried(ItemStack.EMPTY);
-            }
+        if(!currentCarriedStack.isEmpty()) {
+            carriedStack = currentCarriedStack;
+
+            oldMenu.setCarried(ItemStack.EMPTY);
         }
 
         Accessories.openAccessoriesMenu(player, livingEntity, carriedStack);
