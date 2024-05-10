@@ -21,12 +21,15 @@ package top.theillusivec4.curios.common.inventory;
 
 import javax.annotation.Nonnull;
 
+import io.wispforest.accessories.Accessories;
 import io.wispforest.accessories.api.AccessoriesContainer;
 import io.wispforest.accessories.api.menu.AccessoriesBasedSlot;
 import io.wispforest.accessories.client.gui.AccessoriesInternalSlot;
 import io.wispforest.accessories.data.SlotTypeLoader;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
@@ -102,8 +105,7 @@ public class CurioSlot extends AccessoriesInternalSlot {
 
     @OnlyIn(Dist.CLIENT)
     public String getSlotName() {
-        //NO-OP
-        return "";
+        return I18n.get(this.accessoriesContainer.slotType().translation());
     }
 
     @Override

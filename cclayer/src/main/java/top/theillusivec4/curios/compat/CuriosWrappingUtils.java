@@ -69,7 +69,7 @@ public class CuriosWrappingUtils {
 
     public static String curiosToAccessories(String curiosType){
         return switch (curiosType){
-            case "curio" -> "any"; // CONFIRM THIS IS WORKING?
+            case "curio" -> "all"; // CONFIRM THIS IS WORKING?
             case "body" -> "cape";
             case "bracelet" -> "wrist";
             case "head" -> "hat";
@@ -81,7 +81,7 @@ public class CuriosWrappingUtils {
 
     public static String accessoriesToCurios(String accessoryType){
         return switch (accessoryType){
-            case "any" -> "curio"; // CONFIRM THIS IS WORKING?
+            case "all" -> "curio"; // CONFIRM THIS IS WORKING?
             case "cape" -> "body" ;
             case "wrist" -> "bracelet";
             case "hat" -> "head";

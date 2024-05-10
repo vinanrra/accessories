@@ -1,6 +1,8 @@
 package io.wispforest.cclayer;
 
+import io.wispforest.accessories.Accessories;
 import io.wispforest.accessories.api.AccessoriesAPI;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -15,6 +17,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegisterEvent;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.CuriosCapability;
 import top.theillusivec4.curios.api.SlotTypeMessage;
@@ -23,6 +26,7 @@ import top.theillusivec4.curios.api.type.capability.ICurio;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.common.CuriosHelper;
+import top.theillusivec4.curios.common.CuriosRegistry;
 import top.theillusivec4.curios.common.capability.CurioInventoryCapability;
 import top.theillusivec4.curios.common.data.CuriosSlotManager;
 import top.theillusivec4.curios.common.slottype.LegacySlotManager;
@@ -40,6 +44,7 @@ public class CCLayer {
     public static final String MODID = "cclayer";
 
     public CCLayer(){
+        CuriosRegistry.init();
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, this::attachEntitiesCapabilities);
@@ -52,12 +57,7 @@ public class CCLayer {
         CuriosApi.setCuriosHelper(new CuriosHelper());
 
         MinecraftForge.EVENT_BUS.addListener(this::registerCaps);
-
-        //ModList.get().isLoaded("curios");
-
-//        CuriosRegistry.init(eventBus);
     }
-
 
     private void registerCaps(RegisterCapabilitiesEvent evt) {
         evt.register(ICuriosItemHandler.class);

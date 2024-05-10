@@ -39,6 +39,6 @@ public class CosmeticCurioSlot extends CurioSlot {
     @OnlyIn(Dist.CLIENT)
     @Override
     public String getSlotName() {
-        return super.getSlotName();
+        return "Cosmetic: " + super.getSlotName();
     }
 }

@@ -1,23 +1,23 @@
 package top.theillusivec4.curios.common;
 
-//import net.neoforged.bus.api.IEventBus;
-//import net.neoforged.neoforge.attachment.AttachmentType;
-//import net.neoforged.neoforge.registries.DeferredRegister;
-//import net.neoforged.neoforge.registries.NeoForgeRegistries;
-//import top.theillusivec4.curios.api.CuriosApi;
-//import top.theillusivec4.curios.common.capability.CurioInventory;
-
-import java.util.function.Supplier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraftforge.common.extensions.IForgeMenuType;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.common.inventory.container.CuriosContainer;
 
 public class CuriosRegistry {
 
-//    private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, CuriosApi.MODID);
-//
-//    public static final Supplier<AttachmentType<CurioInventory>> INVENTORY = ATTACHMENT_TYPES.register(
-//            "inventory",
-//            () -> AttachmentType.serializable(CurioInventory::new).copyOnDeath().build());
-//
-//    public static void init(IEventBus eventBus) {
-//        ATTACHMENT_TYPES.register(eventBus);
-//    }
+    private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(Registries.MENU, CuriosApi.MODID);
+
+    public static final RegistryObject<MenuType<CuriosContainer>> CURIO_MENU = MENU_TYPES.register("curios_container", () -> IForgeMenuType.create(CuriosContainer::new));
+
+    public static void init() {
+        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        MENU_TYPES.register(eventBus);
+    }
 }
