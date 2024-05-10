@@ -214,12 +214,18 @@ public class SlotTypeLoader extends ReplaceableJsonResourceReloadListener {
         }
 
         public SlotBuilder addAmount(int value){
+            if(this.amount == null) this.amount = 0;
+
             this.amount += value;
+
             return this;
         }
 
         public SlotBuilder subtractAmount(int value){
+            if(this.amount == null) this.amount = 0;
+
             this.amount -= value;
+
             return this;
         }
 
