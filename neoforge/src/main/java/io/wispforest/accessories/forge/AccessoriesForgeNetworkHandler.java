@@ -121,15 +121,17 @@ public class AccessoriesForgeNetworkHandler extends AccessoriesNetworkHandler {
         return (packet, context) -> {
             var client = Minecraft.getInstance();
 
-            var player = client.player;
+            client.execute(() -> {
+                var player = client.player;
 
-            if(player == null) {
-                LOGGER.warn("Player was found to be empty, packet wont be handled! [Location: {}]", id);
+                if(player == null) {
+                    LOGGER.warn("Player was found to be empty, packet wont be handled! [Location: {}]", id);
 
-                return;
-            }
+                    return;
+                }
 
-            client.execute(() -> handler.accept(packet, player));
+                handler.accept(packet, player);
+            });
 
             context.get().setPacketHandled(true);
         };
