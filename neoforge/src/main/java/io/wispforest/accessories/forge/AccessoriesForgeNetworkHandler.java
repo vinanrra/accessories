@@ -10,6 +10,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
@@ -76,7 +78,7 @@ public class AccessoriesForgeNetworkHandler extends AccessoriesNetworkHandler {
                 messageType,
                 AccessoriesPacket::write,
                 (buf) -> AccessoriesPacket.read(supplier, buf),
-                client(location, AccessoriesPacket::handle)
+                (m, contextSupplier) -> client(location, AccessoriesPacket::handle)
         );
 
         i++;
@@ -119,6 +121,13 @@ public class AccessoriesForgeNetworkHandler extends AccessoriesNetworkHandler {
 
     private static <T> BiConsumer<T, Supplier<NetworkEvent.Context>> client(ResourceLocation id, BiConsumer<T, Player> handler) {
         return (packet, context) -> {
+            innerClientCall(packet, context, id, handler).run();
+        };
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private static <T> Runnable innerClientCall(T packet, Supplier<NetworkEvent.Context> context, ResourceLocation id, BiConsumer<T, Player> handler) {
+        return () -> {
             var client = Minecraft.getInstance();
 
             client.execute(() -> {
