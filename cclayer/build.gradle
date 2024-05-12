@@ -43,8 +43,8 @@ dependencies {
 
     modRuntimeOnly ("dev.architectury:architectury-forge:9.2.14")
 
-    modRuntimeOnly ("maven.modrinth:artifacts:9.4.2")
-    modRuntimeOnly ("be.florens:expandability-forge:9.0.3")
+    modRuntimeOnly ("maven.modrinth:artifacts:9.5.4")
+    modRuntimeOnly ("be.florens:expandability-forge:9.0.4")
 
     modImplementation("dev.su5ed.sinytra.fabric-api:fabric-api-base:0.4.31+ef105b4977"){ exclude group: "fabric-api" }
 }
