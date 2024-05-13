@@ -78,7 +78,7 @@ public class AccessoriesForgeNetworkHandler extends AccessoriesNetworkHandler {
                 messageType,
                 AccessoriesPacket::write,
                 (buf) -> AccessoriesPacket.read(supplier, buf),
-                (m, contextSupplier) -> client(location, AccessoriesPacket::handle)
+                (m, contextSupplier) -> client(location, AccessoriesPacket::handle).accept(m, contextSupplier)
         );
 
         i++;
