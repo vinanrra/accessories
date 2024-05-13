@@ -21,6 +21,7 @@ public class CCLayerClient {
         eventBus.addListener(CCLayerClient::loaderRenders);
     }
 
+    @SubscribeEvent
     public static void loaderRenders(EntityRenderersEvent.AddLayers event) {
         CuriosRendererRegistry.load();
     }

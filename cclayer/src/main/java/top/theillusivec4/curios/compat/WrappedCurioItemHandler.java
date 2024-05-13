@@ -52,7 +52,7 @@ public record WrappedCurioItemHandler(Supplier<AccessoriesCapabilityImpl> capabi
         var handlers = new HashMap<String, ICurioStacksHandler>();
 
         this.capability().getContainers()
-                .forEach((s, container) -> handlers.put(s, new WrappedCurioStackHandler((AccessoriesContainerImpl) container)));
+                .forEach((s, container) -> handlers.put(CuriosWrappingUtils.accessoriesToCurios(s), new WrappedCurioStackHandler((AccessoriesContainerImpl) container)));
 
         return handlers;
     }
