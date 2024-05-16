@@ -16,7 +16,11 @@
   "mixins": [
     "ApplyBonusCountMixin",
     "CriteriaTriggersAccessor",
+    "EnchantmentHelperMixin",
     "EndermanMixin",
+    "EquipmentSlotMixin",
+    "EquipmentSlotTypeMixin",
+    "EntityMixin",
     "InventoryMixin",
     "LivingEntityAccessor",
     "LivingEntityMixin",
