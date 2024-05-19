@@ -20,7 +20,7 @@ repositories {
     maven { url 'https://maven.wispforest.io' }
     maven { url "https://maven.su5ed.dev/releases" }
     maven { url 'https://maven.fabricmc.net' }
-    maven { url 'https://maven.minecraftforge.net' }
+    maven { url 'https://maven.neoforged.net/releases' }
 }
 
 dependencies {
@@ -39,7 +39,7 @@ repositories {
     maven("https://maven.wispforest.io")
     maven("https://maven.su5ed.dev/releases")
     maven("https://maven.fabricmc.net")
-    maven("https://maven.minecraftforge.net")
+    maven("https://maven.neoforged.net/releases")
 }
 
 dependencies {
