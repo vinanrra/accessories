@@ -7,6 +7,7 @@ import io.wispforest.accessories.impl.AccessoryNestUtils;
 import io.wispforest.accessories.impl.event.EventUtils;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.util.TriState;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -20,18 +21,18 @@ public class AccessoriesEvents {
      * the given {@link Accessory} found on the entity
      */
     public static final Event<OnDeath> ON_DEATH_EVENT = EventUtils.createEventWithBus(OnDeath.class, AccessoriesInternals::getBus,
-            (bus, invokers) -> (livingEntity, capability) -> {
+            (bus, invokers) -> (livingEntity, capability, damageSource) -> {
                 var state = TriState.DEFAULT;
 
                 for (var invoker : invokers) {
-                    state = invoker.shouldDrop(livingEntity, capability);
+                    state = invoker.shouldDrop(livingEntity, capability, damageSource);
 
                     if (state != TriState.DEFAULT) return state;
                 }
 
                 if(bus.isEmpty()) return state;
 
-                var event = new OnDeathEvent(livingEntity, capability);
+                var event = new OnDeathEvent(livingEntity, capability, damageSource);
 
                 bus.get().post(event);
 
@@ -40,7 +41,7 @@ public class AccessoriesEvents {
     );
 
     public interface OnDeath {
-        TriState shouldDrop(LivingEntity livingEntity, AccessoriesCapability capability);
+        TriState shouldDrop(LivingEntity livingEntity, AccessoriesCapability capability, DamageSource damageSource);
     }
 
     /**
@@ -49,12 +50,14 @@ public class AccessoriesEvents {
     public static class OnDeathEvent extends ReturnableEvent {
         private final LivingEntity entity;
         private final AccessoriesCapability capability;
+        private final DamageSource damageSource;
 
-        public OnDeathEvent(LivingEntity entity, AccessoriesCapability capability) {
+        public OnDeathEvent(LivingEntity entity, AccessoriesCapability capability, DamageSource damageSource) {
             super();
 
             this.entity = entity;
             this.capability = capability;
+            this.damageSource = damageSource;
         }
 
         public final LivingEntity entity() {
@@ -63,6 +66,10 @@ public class AccessoriesEvents {
 
         public final AccessoriesCapability capability() {
             return this.capability;
+        }
+
+        public final DamageSource damageSource() {
+            return this.damageSource;
         }
     }
 
@@ -111,10 +118,8 @@ public class AccessoriesEvents {
             super();
 
             this.dropRule = dropRule;
-
-            this.reference = reference;
-
             this.stack = stack;
+            this.reference = reference;
         }
 
         public final DropRule dropRule() {
