@@ -35,7 +35,7 @@ public class CuriosWrappingUtils {
     }
 
     public static SlotReference fromContext(SlotContext context){
-        return new SlotReference(context.identifier(), context.entity(), context.index());
+        return SlotReference.of(context.entity(), context.identifier(), context.index());
     }
 
     //--
