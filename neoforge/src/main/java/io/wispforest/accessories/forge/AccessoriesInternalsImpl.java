@@ -74,10 +74,6 @@ public class AccessoriesInternalsImpl {
         return ICondition.shouldRegisterEntry(object);
     }
 
-    public static Optional<IEventBus> getBus() {
-        return Optional.of(MinecraftForge.EVENT_BUS);
-    }
-
     public static <T extends AbstractContainerMenu> MenuType<T> registerMenuType(ResourceLocation location, TriFunction<Integer, Inventory, FriendlyByteBuf, T> func) {
         var type = IForgeMenuType.create(func::apply);
 
