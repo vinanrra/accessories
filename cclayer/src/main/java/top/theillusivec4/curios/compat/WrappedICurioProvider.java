@@ -14,13 +14,12 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import top.theillusivec4.curios.api.CuriosCapability;
 import top.theillusivec4.curios.api.type.capability.ICurio;
 
 import java.util.UUID;
 
-public class WrappedICurioProvider implements Accessory, LootingAdjustment, FortuneAdjustment, AllowWalingOnSnow, EndermanMasked, PiglinNeutralInducer {
+public class WrappedICurioProvider implements Accessory, LootingAdjustment, FortuneAdjustment, AllowWalkingOnSnow, EndermanMasked, PiglinNeutralInducer {
 
     public WrappedICurioProvider() {}
 
@@ -130,7 +129,7 @@ public class WrappedICurioProvider implements Accessory, LootingAdjustment, Fort
     }
 
     @Override
-    public TriState makesPiglinsNeutral(ItemStack stack, SlotReference reference) {
+    public TriState makePiglinsNeutral(ItemStack stack, SlotReference reference) {
         var context = CuriosWrappingUtils.create(reference);
 
         return this.iCurio(stack).makesPiglinsNeutral(context) ? TriState.TRUE : TriState.DEFAULT;

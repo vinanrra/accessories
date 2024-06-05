@@ -2,7 +2,7 @@ package io.wispforest.accessories.forge;
 
 import com.mojang.logging.LogUtils;
 import io.wispforest.accessories.Accessories;
-import io.wispforest.accessories.api.events.extra.ImplementedEvents;
+import io.wispforest.accessories.api.events.extra.ExtraEventHandler;
 import io.wispforest.accessories.data.EntitySlotLoader;
 import io.wispforest.accessories.data.SlotGroupLoader;
 import io.wispforest.accessories.data.SlotTypeLoader;
@@ -175,7 +175,7 @@ public class AccessoriesForge {
     //--
 
     public void adjustLooting(LootingLevelEvent event){
-        event.setLootingLevel(ImplementedEvents.lootingAdjustments(event.getEntity(), event.getDamageSource(), event.getLootingLevel()));
+        event.setLootingLevel(ExtraEventHandler.lootingAdjustments(event.getEntity(), event.getDamageSource(), event.getLootingLevel()));
     }
 
     public void onWorldTick(TickEvent.LevelTickEvent event){
