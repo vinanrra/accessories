@@ -22,9 +22,7 @@ package top.theillusivec4.curios.mixin;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
-import com.mojang.datafixers.util.Function3;
 import com.mojang.logging.LogUtils;
-import io.wispforest.accessories.Accessories;
 import io.wispforest.accessories.api.AccessoriesAPI;
 import io.wispforest.accessories.api.slot.SlotBasedPredicate;
 import io.wispforest.accessories.api.slot.SlotReference;
@@ -62,7 +60,6 @@ import top.theillusivec4.curios.compat.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class CuriosImplMixinHooks {
 
