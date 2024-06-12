@@ -29,6 +29,10 @@ public class CurioInventoryCapability {
         final ICuriosItemHandler handler;
         final LivingEntity wearer;
 
+        @Nullable
+        CompoundTag cachedCompoundTag = null;
+        boolean cachedData = false;
+
         Provider(final LivingEntity livingEntity) {
             this.wearer = livingEntity;
             this.handler = new WrappedCurioItemHandler(() -> (AccessoriesCapabilityImpl) this.wearer.accessoriesCapability());
@@ -38,6 +42,10 @@ public class CurioInventoryCapability {
         @Nonnull
         @Override
         public <T> LazyOptional<T> getCapability(@Nullable Capability<T> capability, Direction facing) {
+            if(this.cachedCompoundTag != null && this.cachedData) {
+                deserializeNBT(this.cachedCompoundTag);
+            }
+
             if (CuriosApi.getEntitySlots(this.wearer.getType()).isEmpty()) {
                 return LazyOptional.empty();
             }
@@ -47,9 +55,7 @@ public class CurioInventoryCapability {
 
         @Override
         public Tag serializeNBT() {
-            if (CuriosApi.getEntitySlots(this.wearer.getType()).isEmpty()) {
-                return new CompoundTag();
-            }
+            if (CuriosApi.getEntitySlots(this.wearer.getType()).isEmpty()) return new CompoundTag();
 
             return this.handler.writeTag();
         }
@@ -57,7 +63,16 @@ public class CurioInventoryCapability {
         @Override
         public void deserializeNBT(Tag nbt) {
             if (!(nbt instanceof CompoundTag compoundTag)) return;
-            //if (CuriosApi.getEntitySlots(this.wearer.getType()).isEmpty()) return;
+
+            if(this.cachedCompoundTag == null && !cachedData) {
+                this.cachedCompoundTag = compoundTag;
+                this.cachedData = true;
+
+                return;
+            }
+
+            this.cachedCompoundTag = new CompoundTag();
+            this.cachedData = false;
 
             var inv = new CurioInventory(new AccessoriesCapabilityImpl(this.wearer));
 
