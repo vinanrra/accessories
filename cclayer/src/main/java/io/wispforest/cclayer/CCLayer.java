@@ -1,6 +1,9 @@
 package io.wispforest.cclayer;
 
+import com.google.common.collect.HashMultimap;
 import io.wispforest.accessories.api.AccessoriesAPI;
+import io.wispforest.accessories.api.events.*;
+import io.wispforest.accessories.impl.AccessoriesCapabilityImpl;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -14,6 +17,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.CuriosCapability;
+import top.theillusivec4.curios.api.event.*;
 import top.theillusivec4.curios.api.type.ISlotType;
 import top.theillusivec4.curios.api.type.capability.ICurio;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
@@ -22,6 +26,8 @@ import top.theillusivec4.curios.common.CuriosHelper;
 import top.theillusivec4.curios.common.CuriosRegistry;
 import top.theillusivec4.curios.common.capability.CurioInventoryCapability;
 import top.theillusivec4.curios.common.data.CuriosSlotManager;
+import top.theillusivec4.curios.compat.CuriosWrappingUtils;
+import top.theillusivec4.curios.compat.WrappedCurioItemHandler;
 import top.theillusivec4.curios.compat.WrappedICurioProvider;
 import top.theillusivec4.curios.mixin.CuriosImplMixinHooks;
 import top.theillusivec4.curios.server.SlotHelper;
@@ -47,6 +53,39 @@ public class CCLayer {
         CuriosApi.setCuriosHelper(new CuriosHelper());
 
         MinecraftForge.EVENT_BUS.addListener(this::registerCaps);
+
+        AccessoryChangeCallback.EVENT.register((prevStack, currentStack, reference, stateChange) -> {
+            MinecraftForge.EVENT_BUS.post(new CurioChangeEvent(reference.entity(), reference.slotName(), reference.slot(), prevStack, currentStack));
+        });
+
+        DeathWrapperEventsImpl.init();
+
+        CanEquipCallback.EVENT.register((stack, reference) -> {
+            var event = new CurioEquipEvent(stack, CuriosWrappingUtils.create(reference));
+
+            MinecraftForge.EVENT_BUS.post(event);
+
+            return CuriosWrappingUtils.convert(event.getEquipResult());
+        });
+
+        CanUnequipCallback.EVENT.register((stack, reference) -> {
+            var event = new CurioUnequipEvent(stack, CuriosWrappingUtils.create(reference));
+
+            MinecraftForge.EVENT_BUS.post(event);
+
+            return CuriosWrappingUtils.convert(event.getUnequipResult());
+        });
+
+        AdjustAttributeModifierCallback.EVENT.register((stack, reference, uuid, modifiers) -> {
+            var modifiersCopy = HashMultimap.create(modifiers);
+
+            var event = new CurioAttributeModifierEvent(stack, CuriosWrappingUtils.create(reference), uuid, modifiersCopy);
+
+            MinecraftForge.EVENT_BUS.post(event);
+
+            modifiers.clear();
+            modifiers.putAll(event.getModifiers());
+        });
     }
 
     private void registerCaps(RegisterCapabilitiesEvent evt) {
