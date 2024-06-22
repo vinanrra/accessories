@@ -21,6 +21,7 @@ import top.theillusivec4.curios.compat.WrappedCurioItemHandler;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class DeathWrapperEventsImpl implements OnDeathCallback, OnDropCallback {
 
@@ -48,7 +49,7 @@ public class DeathWrapperEventsImpl implements OnDeathCallback, OnDropCallback {
 
                     return itemEntity;
                 }).filter(Objects::nonNull)
-                .toList();
+                .collect(Collectors.toList());
 
         var dropEventTest = new CurioDropsEvent(entity, handler, damageSource, itemEntities, 0, false);
 
