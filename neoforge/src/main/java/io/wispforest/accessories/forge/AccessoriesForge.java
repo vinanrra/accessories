@@ -113,7 +113,9 @@ public class AccessoriesForge {
     }
 
     public void onDataSync(OnDatapackSyncEvent event){
-        AccessoriesEventHandler.dataSync(event.getPlayerList(), event.getPlayer());
+        var player = event.getPlayer();
+
+        AccessoriesEventHandler.dataSync(player == null ? event.getPlayerList() : null, player);
     }
 
     public void onEntityLoad(EntityJoinLevelEvent event){
