@@ -33,9 +33,14 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public record WrappedCurioItemHandler(Supplier<AccessoriesCapabilityImpl> capabilitySup) implements ICuriosItemHandler {
+public class WrappedCurioItemHandler implements ICuriosItemHandler {
 
     private static final Logger LOGGER = LogUtils.getLogger();
+    private final Supplier<AccessoriesCapabilityImpl> capabilitySup;
+
+    public WrappedCurioItemHandler(Supplier<AccessoriesCapabilityImpl> capabilitySup) {
+        this.capabilitySup = capabilitySup;
+    }
 
     public AccessoriesCapabilityImpl capability() {
         var capability = this.capabilitySup.get();
@@ -66,7 +71,8 @@ public record WrappedCurioItemHandler(Supplier<AccessoriesCapabilityImpl> capabi
     }
 
     @Override
-    public void setCurios(Map<String, ICurioStacksHandler> map) {}
+    public void setCurios(Map<String, ICurioStacksHandler> map) {
+    }
 
     @Override
     public int getSlots() {
@@ -235,7 +241,7 @@ public record WrappedCurioItemHandler(Supplier<AccessoriesCapabilityImpl> capabi
     public ListTag saveInventory(boolean clear) {
         var compound = new CompoundTag();
 
-        ((AccessoriesHolderImpl)this.capability().getHolder())
+        ((AccessoriesHolderImpl) this.capability().getHolder())
                 .write(compound);
 
         var outerCompound = new CompoundTag();
@@ -255,8 +261,8 @@ public record WrappedCurioItemHandler(Supplier<AccessoriesCapabilityImpl> capabi
         var compound = data.getCompound(0);
 
         try {
-            if(compound.contains("is_accessories_data")){
-                ((AccessoriesHolderImpl)this.capability().getHolder())
+            if (compound.contains("is_accessories_data")) {
+                ((AccessoriesHolderImpl) this.capability().getHolder())
                         .read(compound.getCompound("main_data"));
             } else {
                 CurioInventory.readData(this.getWearer(), this.capability(), data);
@@ -287,4 +293,28 @@ public record WrappedCurioItemHandler(Supplier<AccessoriesCapabilityImpl> capabi
     @Override
     public void shrinkSlotType(String identifier, int amount) {
     }
+
+    public Supplier<AccessoriesCapabilityImpl> capabilitySup() {
+        return capabilitySup;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (WrappedCurioItemHandler) obj;
+        return Objects.equals(this.capabilitySup, that.capabilitySup);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(capabilitySup);
+    }
+
+    @Override
+    public String toString() {
+        return "WrappedCurioItemHandler[" +
+                "capabilitySup=" + capabilitySup + ']';
+    }
+
 }

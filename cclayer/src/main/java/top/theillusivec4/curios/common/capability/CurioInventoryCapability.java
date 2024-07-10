@@ -16,11 +16,18 @@ import top.theillusivec4.curios.compat.WrappedCurioItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 public class CurioInventoryCapability {
 
     public static ICapabilityProvider createProvider(final LivingEntity livingEntity) {
         return new Provider(livingEntity);
+    }
+
+    public static class CurioInventoryWrapper extends WrappedCurioItemHandler {
+        public CurioInventoryWrapper(final LivingEntity livingEntity) {
+            super(() -> (AccessoriesCapabilityImpl) livingEntity.accessoriesCapability());
+        }
     }
 
     public static class Provider implements ICapabilitySerializable<Tag> {
