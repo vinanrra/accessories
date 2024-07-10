@@ -1,22 +1,24 @@
 package io.wispforest.accessories.compat;
 
 import io.wispforest.accessories.Accessories;
+import io.wispforest.owo.config.annotation.*;
 import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Config(name = Accessories.MODID)
-public class AccessoriesConfig implements ConfigData {
+@Config(name = Accessories.MODID, wrapperName = "AccessoriesConfig")
+public class AccessoriesConfigModel {
 
-    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
+    @Nest
+    @Expanded
     public ClientData clientData = new ClientData();
 
     public static class ClientData {
         public boolean showGroupTabs = true;
 
+        @Hook
         public boolean showUniqueRendering = false;
         public boolean showLineRendering = true;
 
@@ -34,7 +36,7 @@ public class AccessoriesConfig implements ConfigData {
     public List<SlotAmountModifier> modifiers = new ArrayList<>();
 
     public static class SlotAmountModifier {
-        public String slotType;
+        public String slotType = "";
         public int amount = 0;
     }
 }

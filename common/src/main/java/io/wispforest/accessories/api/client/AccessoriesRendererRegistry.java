@@ -66,7 +66,7 @@ public class AccessoriesRendererRegistry {
     public static AccessoryRenderer getRender(Item item){
         var renderer = CACHED_RENDERERS.getOrDefault(item, DefaultAccessoryRenderer.INSTANCE);
 
-        if(renderer == null && Accessories.getConfig().clientData.forceNullRenderReplacement) {
+        if(renderer == null && Accessories.getConfig().clientData.forceNullRenderReplacement()) {
             renderer = DefaultAccessoryRenderer.INSTANCE;
         }
 

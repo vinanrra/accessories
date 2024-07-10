@@ -30,27 +30,15 @@ public class AccessoriesClient {
     public static void init(){
         AccessoriesInternalsClient.registerToMenuTypes();
 
-        Accessories.CONFIG_HOLDER.registerSaveListener((manager, data) -> {
-            handleConfigLoad(data);
+        Accessories.CONFIG_HOLDER.clientData.subscribeToShowUniqueRendering(value -> {
+            var currentPlayer = Minecraft.getInstance().player;
 
-            return InteractionResult.SUCCESS;
-        });
-
-        Accessories.CONFIG_HOLDER.registerLoadListener((manager, data) -> {
-            handleConfigLoad(data);
-
-            return InteractionResult.SUCCESS;
-        });
-    }
-
-    private static void handleConfigLoad(AccessoriesConfig config) {
-        var currentPlayer = Minecraft.getInstance().player;
-
-        if(currentPlayer != null && Minecraft.getInstance().level != null) {
-            if(currentPlayer.accessoriesHolder().showUniqueSlots() && !config.clientData.showUniqueRendering) {
-                AccessoriesInternals.getNetworkHandler().sendToServer(SyncHolderChange.of(HolderProperty.UNIQUE_PROP, false));
+            if(currentPlayer != null && Minecraft.getInstance().level != null) {
+                if(currentPlayer.accessoriesHolder().showUniqueSlots() && !value) {
+                    AccessoriesInternals.getNetworkHandler().sendToServer(SyncHolderChange.of(HolderProperty.UNIQUE_PROP, false));
+                }
             }
-        }
+        });
     }
 
     public interface WindowResizeCallback {
@@ -83,7 +71,7 @@ public class AccessoriesClient {
 
             if(holder == null) return false;
 
-            if(slots.isEmpty() && !holder.showUnusedSlots() && !displayUnusedSlotWarning && !Accessories.getConfig().clientData.disableEmptySlotScreenError) {
+            if(slots.isEmpty() && !holder.showUnusedSlots() && !displayUnusedSlotWarning && !Accessories.getConfig().clientData.disableEmptySlotScreenError()) {
                 player.displayClientMessage(Component.literal("[Accessories]: No Used Slots found by any mod directly, such will show empty unless a item is found to implement slots!"), false);
 
                 displayUnusedSlotWarning = true;

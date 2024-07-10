@@ -159,7 +159,7 @@ public class AccessoriesScreen extends EffectRenderingInventoryScreen<Accessorie
             return true;
         }
 
-        if(Accessories.getConfig().clientData.showGroupTabs && this.menu.maxScrollableIndex() > 0) {
+        if(Accessories.getConfig().clientData.showGroupTabs() && this.menu.maxScrollableIndex() > 0) {
             int x = getStartingPanelX();
             int y = this.topPos;
 
@@ -212,7 +212,7 @@ public class AccessoriesScreen extends EffectRenderingInventoryScreen<Accessorie
 
         // --
 
-        HOLD_LINE_INFO = this.getMenu().areLinesShown() && Accessories.getConfig().clientData.showLineRendering;
+        HOLD_LINE_INFO = this.getMenu().areLinesShown() && Accessories.getConfig().clientData.showLineRendering();
 
         IS_RENDERING_TARGETS = true;
 
@@ -344,7 +344,7 @@ public class AccessoriesScreen extends EffectRenderingInventoryScreen<Accessorie
 
         var pose = guiGraphics.pose();
 
-        if(Accessories.getConfig().clientData.showGroupTabs) {
+        if(Accessories.getConfig().clientData.showGroupTabs()) {
             for (var entry : getGroups(x, y).entrySet()) {
                 var group = entry.getKey();
                 var pair = entry.getValue();
@@ -375,7 +375,7 @@ public class AccessoriesScreen extends EffectRenderingInventoryScreen<Accessorie
 
         this.renderTooltip(guiGraphics, mouseX, mouseY);
 
-        if(Accessories.getConfig().clientData.showLineRendering && !this.accessoryLines.isEmpty()) {
+        if(Accessories.getConfig().clientData.showLineRendering() && !this.accessoryLines.isEmpty()) {
             var buf = guiGraphics.bufferSource().getBuffer(RenderType.LINES);
             var lastPose = guiGraphics.pose().last();
 
@@ -514,7 +514,7 @@ public class AccessoriesScreen extends EffectRenderingInventoryScreen<Accessorie
 
         btnOffset += 15;
 
-        if(Accessories.getConfig().clientData.showUniqueRendering) {
+        if(Accessories.getConfig().clientData.showUniqueRendering()) {
             var anyUniqueSlots = EntitySlotLoader.getEntitySlots(this.targetEntityDefaulted()).values()
                     .stream()
                     .anyMatch(slotType -> UniqueSlotHandling.isUniqueSlot(slotType.name()));
@@ -538,7 +538,7 @@ public class AccessoriesScreen extends EffectRenderingInventoryScreen<Accessorie
             }
         }
 
-        if(Accessories.getConfig().clientData.showLineRendering) {
+        if(Accessories.getConfig().clientData.showLineRendering()) {
             this.linesToggleButton = this.addRenderableWidget(
                     Button.builder(Component.empty(), (btn) -> {
                                 AccessoriesInternals.getNetworkHandler()
@@ -635,7 +635,7 @@ public class AccessoriesScreen extends EffectRenderingInventoryScreen<Accessorie
     }
 
     public void updateLinesButton() {
-        if(Accessories.getConfig().clientData.showLineRendering) {
+        if(Accessories.getConfig().clientData.showLineRendering()) {
             this.linesToggleButton.setTooltip(linesToggleTooltip(this.menu.areLinesShown()));
         }
     }
@@ -726,7 +726,7 @@ public class AccessoriesScreen extends EffectRenderingInventoryScreen<Accessorie
             }
         }
 
-        if(Accessories.getConfig().clientData.showGroupTabs) {
+        if(Accessories.getConfig().clientData.showGroupTabs()) {
             int panelX = getStartingPanelX();
             int panelY = this.topPos;
 
@@ -766,7 +766,7 @@ public class AccessoriesScreen extends EffectRenderingInventoryScreen<Accessorie
 
         boolean insideGroupPanel = false;
 
-        if(Accessories.getConfig().clientData.showGroupTabs && this.menu.maxScrollableIndex() > 0) {
+        if(Accessories.getConfig().clientData.showGroupTabs() && this.menu.maxScrollableIndex() > 0) {
             for (var value : this.getGroups(sidePanelX, sidePanelY).values()) {
                 if (value.isInBounds((int) Math.round(mouseX), (int) Math.round(mouseY))) {
                     insideGroupPanel = true;

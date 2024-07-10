@@ -45,8 +45,8 @@ public abstract class CreativeInventoryScreenMixin extends EffectRenderingInvent
 
     @Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/EffectRenderingInventoryScreen;init()V", shift = At.Shift.AFTER))
     private void injectAccessoryButton(CallbackInfo ci) {
-        var xOffset = Accessories.getConfig().clientData.creativeInventoryButtonXOffset;
-        var yOffset = Accessories.getConfig().clientData.creativeInventoryButtonYOffset;
+        var xOffset = Accessories.getConfig().clientData.creativeInventoryButtonXOffset();
+        var yOffset = Accessories.getConfig().clientData.creativeInventoryButtonYOffset();
 
         this.accessoryButton = this.addRenderableWidget(
                 Button.builder(Component.empty(), button -> {

@@ -34,9 +34,7 @@ public class Accessories {
     }
 
     public static AccessoriesConfig getConfig(){
-        if(CONFIG_HOLDER == null) return null;
-
-        return CONFIG_HOLDER.getConfig();
+        return CONFIG_HOLDER;
     }
 
     public static boolean attemptOpenScreenPlayer(ServerPlayer player) {
@@ -66,7 +64,7 @@ public class Accessories {
     //--
 
     @Nullable
-    public static ConfigHolder<AccessoriesConfig> CONFIG_HOLDER = null;
+    public static AccessoriesConfig CONFIG_HOLDER = null;
 
     public static MenuType<AccessoriesMenu> ACCESSORIES_MENU_TYPE;
 
@@ -74,7 +72,7 @@ public class Accessories {
     public static AccessoryChangedCriterion ACCESSORY_UNEQUIPPED;
 
     public static void init() {
-        CONFIG_HOLDER = AutoConfig.register(AccessoriesConfig.class, JanksonConfigSerializer::new);
+        CONFIG_HOLDER = AccessoriesConfig.createAndLoad();
 
         AllowEntityModificationCallback.EVENT.register((target, player, reference) -> {
             var type = target.getType();

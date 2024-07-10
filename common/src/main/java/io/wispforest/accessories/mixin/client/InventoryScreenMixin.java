@@ -30,8 +30,8 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
 
     @Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/InventoryScreen;addRenderableWidget(Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;"))
     private void injectAccessoryButton(CallbackInfo ci){
-        var xOffset = Accessories.getConfig().clientData.inventoryButtonXOffset;
-        var yOffset = Accessories.getConfig().clientData.inventoryButtonYOffset;
+        var xOffset = Accessories.getConfig().clientData.inventoryButtonXOffset();
+        var yOffset = Accessories.getConfig().clientData.inventoryButtonYOffset();
 
         accessoryButton = this.addRenderableWidget(
                 Button.builder(Component.empty(), button -> {
@@ -50,8 +50,8 @@ public abstract class InventoryScreenMixin extends EffectRenderingInventoryScree
     private void adjustAccessoryButton(CallbackInfo ci){
         if(this.accessoryButton == null) return;
 
-        var xOffset = Accessories.getConfig().clientData.inventoryButtonXOffset;
-        var yOffset = Accessories.getConfig().clientData.inventoryButtonYOffset;
+        var xOffset = Accessories.getConfig().clientData.inventoryButtonXOffset();
+        var yOffset = Accessories.getConfig().clientData.inventoryButtonYOffset();
 
         accessoryButton.setPosition(this.leftPos + xOffset, this.topPos + yOffset);
     }
