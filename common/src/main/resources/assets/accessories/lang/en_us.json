@@ -63,6 +63,6 @@
   "text.config.accessories.option.modifiers": "Slot Amount Modifiers",
   "text.config.accessories.option.modifiers.tooltip": "List containing a pairs of slot types to offset amounts for the given slot types",
   "text.config.accessories.option.SlotAmountModifier": "Modifier Entry",
-  "text.config.accessories.option.modifiers.slotType": "Slot Type Name",
-  "text.config.accessories.option.modifiers.amount": "Offset Amount"
+  "text.config.accessories.option.modifiers.slotType": "Slot Name",
+  "text.config.accessories.option.modifiers.amount": "Offset Value"
 }
