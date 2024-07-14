@@ -19,6 +19,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.BooleanUtils;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,7 +36,8 @@ public class AccessoriesContainerImpl implements AccessoriesContainer, InstanceC
 
     private final Multimap<AttributeModifier.Operation, AttributeModifier> modifiersByOperation = HashMultimap.create();
 
-    private int baseSize;
+    @Nullable
+    private Integer baseSize;
 
     private List<Boolean> renderOptions;
 
@@ -59,7 +61,8 @@ public class AccessoriesContainerImpl implements AccessoriesContainer, InstanceC
         });
     }
 
-    public int getBaseSize(){
+    @Nullable
+    public Integer getBaseSize(){
         return this.baseSize;
     }
 
@@ -91,6 +94,8 @@ public class AccessoriesContainerImpl implements AccessoriesContainer, InstanceC
         if(this.capability.entity().level().isClientSide) return;
 
         var slotType = this.slotType();
+
+        if(this.baseSize == null) this.baseSize = 0;
 
         if (slotType != null && this.baseSize != slotType.amount()) {
             this.baseSize = slotType.amount();
@@ -349,7 +354,7 @@ public class AccessoriesContainerImpl implements AccessoriesContainer, InstanceC
     public void write(CompoundTag tag, boolean sync){
         tag.putString(SLOT_NAME_KEY, this.slotName);
 
-        tag.putInt(BASE_SIZE_KEY, this.baseSize);
+        if(this.baseSize != null) tag.putInt(BASE_SIZE_KEY, this.baseSize);
 
         ByteArrayTag renderOptionsTag = new ByteArrayTag(new byte[renderOptions.size()]);
 
@@ -400,11 +405,7 @@ public class AccessoriesContainerImpl implements AccessoriesContainer, InstanceC
     public void read(CompoundTag tag, boolean sync){
         this.slotName = tag.getString(SLOT_NAME_KEY);
 
-        var sizeFromTag = (tag.contains(BASE_SIZE_KEY)) ? tag.getInt(BASE_SIZE_KEY) : baseSize;
-
-        var slotType = SlotTypeLoader.getSlotType(this.capability.entity().level(), this.slotName);
-
-        this.baseSize = slotType != null ? slotType.amount() : sizeFromTag;
+        this.baseSize = (tag.contains(BASE_SIZE_KEY)) ? tag.getInt(BASE_SIZE_KEY) : null;
 
         var renderOptionsTag = tag.get(RENDER_OPTIONS_KEY);
 
