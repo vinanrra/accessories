@@ -236,8 +236,38 @@ public class CuriosImplMixinHooks {
   }
 
   public static boolean isStackValid(SlotContext slotContext, ItemStack stack) {
-    boolean isValid = AccessoriesAPI.canInsertIntoSlot(stack, SlotReference.of(slotContext.entity(), CuriosWrappingUtils.curiosToAccessories(slotContext.identifier()), slotContext.index()));
-    if(isValid) return true;
+    var slotName = CuriosWrappingUtils.curiosToAccessories(slotContext.identifier());
+
+    /*
+     * blodhgarm: This is a cursed workaround for people who decided that passing a null entity for SlotContext
+     * is a valid solution and for the ones that do it... you make my life hard even if it works within curios.
+     * Good news is that this will not be needed within the future... I HOPE!
+     */
+    if(slotContext.entity() == null) {
+      var slotType = SlotTypeLoader.INSTANCE.getSlotTypes(false).get(slotName);
+
+      if(slotType == null) return false;
+
+      boolean bl = false;
+
+      try {
+        bl = AccessoriesAPI.getPredicateResults(slotType.validators(), null, slotType, 0, stack);
+      } catch (Exception ignored) {}
+
+      if(!bl) return false;
+
+      boolean bl2 = false;
+
+      try {
+        bl2 = AccessoriesAPI.canEquip(stack, SlotReference.of(null, slotName, 0));
+      } catch (Exception ignored) {}
+
+      if(bl2) return true;
+    } else {
+      boolean isValid = AccessoriesAPI.canInsertIntoSlot(stack, SlotReference.of(slotContext.entity(), slotName, slotContext.index()));
+
+      if(isValid) return true;
+    }
 
     String id = slotContext.identifier();
     Set<String> slots = getItemStackSlots(stack, slotContext.entity()).keySet();
