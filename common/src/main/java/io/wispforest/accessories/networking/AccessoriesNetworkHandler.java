@@ -36,13 +36,15 @@ public abstract class AccessoriesNetworkHandler {
 
     public final void register() {
         registerBuilderC2S(ScreenOpen.class, ScreenOpen::new);
-        registerBuilderC2S(MenuScroll.class, MenuScroll::new);
         registerBuilderC2S(NukeAccessories.class, NukeAccessories::new);
         registerBuilderC2S(SyncCosmeticToggle.class, SyncCosmeticToggle::new);
 
         registerBuilderS2C(SyncEntireContainer.class, SyncEntireContainer::new);
         registerBuilderS2C(SyncContainerData.class, SyncContainerData::new);
         registerBuilderS2C(SyncData.class, SyncData::new);
+        registerBuilderS2C(AccessoryBreak.class, AccessoryBreak::new);
+
+        registerBuilderC2S(MenuScroll.class, MenuScroll::new);
         registerBuilderS2C(MenuScroll.class, MenuScroll::new);
 
         registerBuilderS2C(SyncHolderChange.class, SyncHolderChange::new);

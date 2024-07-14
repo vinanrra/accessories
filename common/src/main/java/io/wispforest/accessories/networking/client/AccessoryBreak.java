@@ -13,6 +13,10 @@ public class AccessoryBreak extends AccessoriesPacket {
     private int entityId;
     private int slot;
 
+    public AccessoryBreak() {
+        super();
+    }
+
     public AccessoryBreak(SlotReference slotReference) {
         super(false);
 
