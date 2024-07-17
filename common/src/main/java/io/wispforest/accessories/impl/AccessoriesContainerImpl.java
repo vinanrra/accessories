@@ -275,7 +275,7 @@ public class AccessoriesContainerImpl implements AccessoriesContainer, InstanceC
 
     @Override
     public void removeModifier(UUID uuid) {
-        var modifier = this.modifiers.get(uuid);
+        var modifier = this.modifiers.remove(uuid);
 
         if(modifier == null) return;
 
